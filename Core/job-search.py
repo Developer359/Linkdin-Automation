@@ -18,17 +18,19 @@ OUTPUT_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../job_re
 
 MAX_AGE_DAYS = 1
 HOURS_OLD = MAX_AGE_DAYS * 24  # Strictly under 24 hours
+MAX_SALARY_YEARLY = 60000      # STRICT CAP: Maximum $60,000 USD/year
 
 SITES = ["indeed", "linkedin"]
 
-RESULTS_WANTED_PER_SITE = 35  # Increased candidate fetch pool to find more junior roles
+RESULTS_WANTED_PER_SITE = 40   # Fetches larger pool to isolate low-salary junior/intern roles
 TARGET_PER_QUERY = 10
 
-# High-level and management keywords strictly blocked using regex word boundaries
+# Forbidden words: Senior, Manager, Tech Lead, Level II, Level III, etc.
 EXPERT_KEYWORDS = [
     "senior", "sr", "sr.", "lead", "principal", "architect", "staff", 
     "director", "head", "vp", "manager", "expert", "chief", "team lead",
-    "executive", "founder", "tech lead", "lead engineer"
+    "executive", "founder", "tech lead", "lead engineer", "ii", "iii", "iv",
+    "level 2", "level 3", "level ii", "level iii"
 ]
 EXPERT_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in EXPERT_KEYWORDS]) + r')\b', re.IGNORECASE)
 
@@ -49,14 +51,14 @@ def load_and_prepare_queries() -> list[dict]:
     for item in queries_data:
         if isinstance(item, dict):
             q = item.get("query", "").strip()
-            j_type = item.get("category") or item.get("job_type", "Junior / Internship / Mid")
+            j_type = item.get("category") or item.get("job_type", "Junior / Internship")
             j_type = str(j_type).strip()
             if q:
                 formatted_queries.append({"query": q, "job_type": j_type})
         elif isinstance(item, str):
             q = item.strip()
             if q:
-                formatted_queries.append({"query": q, "job_type": "Junior / Internship / Mid"})
+                formatted_queries.append({"query": q, "job_type": "Junior / Internship"})
 
     return formatted_queries
 
@@ -82,6 +84,32 @@ def safe_str(value, default: str = "") -> str:
     return str(value)
 
 
+def is_salary_within_limit(row) -> bool:
+    """Removes any job exceeding $60,000/year or $30/hour."""
+    min_amt = row.get("min_amount")
+    max_amt = row.get("max_amount")
+    interval = str(row.get("interval", "")).lower()
+
+    check_amt = max_amt if not pd.isna(max_amt) and max_amt else min_amt
+    if pd.isna(check_amt) or not check_amt:
+        return True  # Keep unstated pay unless title fails level checks
+
+    try:
+        val = float(check_amt)
+        if "hour" in interval:
+            yearly_equiv = val * 2080  # 40 hrs/wk * 52 wks
+        elif "month" in interval:
+            yearly_equiv = val * 12
+        elif "week" in interval:
+            yearly_equiv = val * 52
+        else:
+            yearly_equiv = val
+
+        return yearly_equiv <= MAX_SALARY_YEARLY
+    except (ValueError, TypeError):
+        return True
+
+
 def format_pay(row) -> str:
     min_amt = row.get("min_amount")
     max_amt = row.get("max_amount")
@@ -97,41 +125,34 @@ def format_pay(row) -> str:
     return f"{pay_str} / {interval}".strip(" /") if interval else pay_str
 
 
-def is_valid_junior_or_mid(title: str) -> bool:
-    """Strictly blocks senior, manager, and high-role titles."""
+def is_valid_title(title: str) -> bool:
+    """Blocks any title with Senior, Manager, or Level II/III modifiers."""
     return not bool(EXPERT_REGEX.search(title))
 
 
 def detect_seniority_level(title: str, description: str) -> str:
-    """Classifies job into Junior, Internship, or Mid-Level."""
+    """Classifies job strictly into Internship or Junior."""
     text = f"{title} {description}".lower()
-    if re.search(r'\b(junior|jr|jr\.|entry|entry-level|associate)\b', text):
-        return "Junior"
     if re.search(r'\b(intern|internship|trainee)\b', text):
         return "Internship"
-    return "Mid-Level"
+    return "Junior"
 
 
 def calculate_quality_score(job: dict) -> int:
-    """Ranks jobs with heavy priority on Junior and Internship roles."""
+    """Prioritizes explicit Junior and Internship postings."""
     score = 0
     level = job.get("seniority_level")
     desc_lower = job.get("description", "").lower()
 
-    # Heavy priority weighting for Junior and Internship over Mid-Level
     if level == "Junior":
         score += 10
     elif level == "Internship":
-        score += 8
-    elif level == "Mid-Level":
-        score += 1
+        score += 10
 
-    # Salary disclosure bonus
     if job.get("pay_info") and job["pay_info"] != "Not specified":
         score += 3
 
-    # Perks bonus
-    perks = ["health", "bonus", "equity", "pto", "vacation", "stipend", "401k", "insurance"]
+    perks = ["health", "bonus", "stipend", "pto", "vacation"]
     if any(perk in desc_lower for perk in perks):
         score += 2
 
@@ -165,8 +186,12 @@ def scrape_site_candidates(site: str, query: str, job_type: str, query_index: in
 
         title = safe_str(row.get("title"))
 
-        # STRICT REGEX EXCLUSION OF SENIOR & MANAGER ROLES
-        if not is_valid_junior_or_mid(title):
+        # FILTER 1: Strict title check (No Senior/Manager/Engineer II)
+        if not is_valid_title(title):
+            continue
+
+        # FILTER 2: Strict salary check (Max $60,000/year)
+        if not is_salary_within_limit(row):
             continue
 
         age_days = days_since(row.get("date_posted"))
@@ -179,7 +204,6 @@ def scrape_site_candidates(site: str, query: str, job_type: str, query_index: in
         tags = [w for w in title.split() if len(w) > 3]
         pay_info = format_pay(row)
 
-        # Company Logo & URL extractions from JobSpy
         company_url = safe_str(row.get("company_url") or row.get("company_url_direct"))
         company_logo = safe_str(
             row.get("company_logo") or row.get("logo_photo_url") or row.get("company_logo_url")
@@ -216,7 +240,7 @@ def execute_job_search(query_items: list[dict]):
     seen_urls = set()
 
     print(
-        f"--- Running Remote Job Engine | Priority: Junior & Internship "
+        f"--- Running Job Engine | Strictly <= $60,000/yr | Junior & Internship Only "
         f"| Target: {TARGET_PER_QUERY} Jobs/Query | Max Age: 24h ---"
     )
 
@@ -236,7 +260,6 @@ def execute_job_search(query_items: list[dict]):
             )
             raw_query_candidates.extend(site_candidates)
 
-        # Sort descending by quality score so Junior and Internship sort first
         sorted_candidates = sorted(raw_query_candidates, key=lambda x: x["quality_score"], reverse=True)
         top_10_jobs = sorted_candidates[:TARGET_PER_QUERY]
 
@@ -249,7 +272,7 @@ def execute_job_search(query_items: list[dict]):
             print(f"      Link: {job['url']}")
             print(f"      Pay: {job['pay_info']} | Company: {job['company_name']}")
 
-        print(f"  -> Kept Top {len(top_10_jobs)} Remote Job(s) (Junior/Intern Prioritized) for this query.")
+        print(f"  -> Kept Top {len(top_10_jobs)} Junior/Intern Job(s) (<= $60k/yr) for this query.")
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump({"jobs": all_jobs}, f, indent=4, ensure_ascii=False)
@@ -259,7 +282,7 @@ def execute_job_search(query_items: list[dict]):
         site_counts[job["website_name"]] = site_counts.get(job["website_name"], 0) + 1
     split_str = ", ".join(f"{site}: {count}" for site, count in site_counts.items())
 
-    print(f"\nSaved total {len(all_jobs)} job(s) (<= 24h old) to job_results_cache.json")
+    print(f"\nSaved total {len(all_jobs)} junior job(s) (<= $60k/yr, <= 24h old) to job_results_cache.json")
     print(f"Site distribution -> {split_str}")
     return all_jobs
 
