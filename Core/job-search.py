@@ -1,6 +1,5 @@
 import os
 import json
-import re
 import warnings
 import logging
 from datetime import datetime, date
@@ -17,33 +16,20 @@ CACHE_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../query.j
 OUTPUT_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../job_results_cache.json"))
 
 MAX_AGE_DAYS = 1
-HOURS_OLD = MAX_AGE_DAYS * 24  # Strictly under 24 hours
-MAX_SALARY_YEARLY = 60000      # STRICT CAP: Maximum $60,000 USD/year
-
+HOURS_OLD = MAX_AGE_DAYS * 24  # 24 hours limit
 SITES = ["indeed", "linkedin"]
-
-RESULTS_WANTED_PER_SITE = 40   # Fetches larger pool to isolate low-salary junior/intern roles
-TARGET_PER_QUERY = 10
-
-# Forbidden words: Senior, Manager, Tech Lead, Level II, Level III, etc.
-EXPERT_KEYWORDS = [
-    "senior", "sr", "sr.", "lead", "principal", "architect", "staff", 
-    "director", "head", "vp", "manager", "expert", "chief", "team lead",
-    "executive", "founder", "tech lead", "lead engineer", "ii", "iii", "iv",
-    "level 2", "level 3", "level ii", "level iii"
-]
-EXPERT_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in EXPERT_KEYWORDS]) + r')\b', re.IGNORECASE)
+TARGET_PER_QUERY = 5
+RESULTS_WANTED_PER_SITE = 20   # Increased pool to ensure 5 strict remote matches per query
 
 
 def load_and_prepare_queries() -> list[dict]:
-    target_file = CACHE_FILE
-    if not os.path.exists(target_file):
-        target_file = "query.json"
+    """Reads queries, categories, and job types directly from query.json."""
+    target_file = CACHE_FILE if os.path.exists(CACHE_FILE) else "query.json"
 
     if not os.path.exists(target_file):
-        raise FileNotFoundError("Cache file 'query.json' not found in root directory.")
+        raise FileNotFoundError(f"Cache file '{target_file}' not found.")
 
-    with open(target_file, "r") as f:
+    with open(target_file, "r", encoding="utf-8") as f:
         data = json.load(f)
         queries_data = data.get("queries", [])
 
@@ -51,14 +37,14 @@ def load_and_prepare_queries() -> list[dict]:
     for item in queries_data:
         if isinstance(item, dict):
             q = item.get("query", "").strip()
-            j_type = item.get("category") or item.get("job_type", "Junior / Internship")
-            j_type = str(j_type).strip()
+            category = item.get("category", "General").strip()
+            job_type = item.get("job_type", "Junior / Entry Level").strip()
             if q:
-                formatted_queries.append({"query": q, "job_type": j_type})
-        elif isinstance(item, str):
-            q = item.strip()
-            if q:
-                formatted_queries.append({"query": q, "job_type": "Junior / Internship"})
+                formatted_queries.append({
+                    "query": q,
+                    "category": category,
+                    "job_type": job_type
+                })
 
     return formatted_queries
 
@@ -84,32 +70,6 @@ def safe_str(value, default: str = "") -> str:
     return str(value)
 
 
-def is_salary_within_limit(row) -> bool:
-    """Removes any job exceeding $60,000/year or $30/hour."""
-    min_amt = row.get("min_amount")
-    max_amt = row.get("max_amount")
-    interval = str(row.get("interval", "")).lower()
-
-    check_amt = max_amt if not pd.isna(max_amt) and max_amt else min_amt
-    if pd.isna(check_amt) or not check_amt:
-        return True  # Keep unstated pay unless title fails level checks
-
-    try:
-        val = float(check_amt)
-        if "hour" in interval:
-            yearly_equiv = val * 2080  # 40 hrs/wk * 52 wks
-        elif "month" in interval:
-            yearly_equiv = val * 12
-        elif "week" in interval:
-            yearly_equiv = val * 52
-        else:
-            yearly_equiv = val
-
-        return yearly_equiv <= MAX_SALARY_YEARLY
-    except (ValueError, TypeError):
-        return True
-
-
 def format_pay(row) -> str:
     min_amt = row.get("min_amount")
     max_amt = row.get("max_amount")
@@ -125,168 +85,116 @@ def format_pay(row) -> str:
     return f"{pay_str} / {interval}".strip(" /") if interval else pay_str
 
 
-def is_valid_title(title: str) -> bool:
-    """Blocks any title with Senior, Manager, or Level II/III modifiers."""
-    return not bool(EXPERT_REGEX.search(title))
+def is_strictly_remote(row) -> bool:
+    """Enforces double verification that the job is 100% remote."""
+    is_remote_flag = row.get("is_remote")
+    if is_remote_flag is True:
+        return True
+
+    location = safe_str(row.get("location")).lower()
+    title = safe_str(row.get("title")).lower()
+    desc = safe_str(row.get("description")).lower()
+
+    # Match common remote indicators
+    remote_keywords = ["remote", "work from home", "wfh", "anywhere", "telecommute"]
+    
+    if any(kw in location for kw in remote_keywords):
+        return True
+    if any(kw in title for kw in remote_keywords):
+        return True
+    if "100% remote" in desc or "fully remote" in desc:
+        return True
+
+    return False
 
 
-def detect_seniority_level(title: str, description: str) -> str:
-    """Classifies job strictly into Internship or Junior."""
-    text = f"{title} {description}".lower()
-    if re.search(r'\b(intern|internship|trainee)\b', text):
-        return "Internship"
-    return "Junior"
-
-
-def calculate_quality_score(job: dict) -> int:
-    """Prioritizes explicit Junior and Internship postings."""
-    score = 0
-    level = job.get("seniority_level")
-    desc_lower = job.get("description", "").lower()
-
-    if level == "Junior":
-        score += 10
-    elif level == "Internship":
-        score += 10
-
-    if job.get("pay_info") and job["pay_info"] != "Not specified":
-        score += 3
-
-    perks = ["health", "bonus", "stipend", "pto", "vacation"]
-    if any(perk in desc_lower for perk in perks):
-        score += 2
-
-    return score
-
-
-def scrape_site_candidates(site: str, query: str, job_type: str, query_index: int, seen_urls: set) -> list[dict]:
-    try:
-        jobs_df = scrape_jobs(
-            site_name=[site],
-            search_term=query,
-            is_remote=True,
-            results_wanted=RESULTS_WANTED_PER_SITE,
-            hours_old=HOURS_OLD,
-            country_indeed="USA",
-            description_format="markdown",
-            linkedin_fetch_description=True,
-        )
-    except Exception as e:
-        print(f"  -> Error scraping {site} for query {query_index}: {e}")
-        return []
-
-    if jobs_df is None or jobs_df.empty:
-        return []
-
-    candidates = []
-    for _, row in jobs_df.iterrows():
-        url = row.get("job_url")
-        if not url or pd.isna(url) or url in seen_urls:
-            continue
-
-        title = safe_str(row.get("title"))
-
-        # FILTER 1: Strict title check (No Senior/Manager/Engineer II)
-        if not is_valid_title(title):
-            continue
-
-        # FILTER 2: Strict salary check (Max $60,000/year)
-        if not is_salary_within_limit(row):
-            continue
-
-        age_days = days_since(row.get("date_posted"))
-        if age_days is not None and age_days > MAX_AGE_DAYS:
-            continue
-
-        company_name = safe_str(row.get("company"), "Unknown")
-        website_name = safe_str(row.get("site"), site)
-        description = safe_str(row.get("description"))[:2000]
-        tags = [w for w in title.split() if len(w) > 3]
-        pay_info = format_pay(row)
-
-        company_url = safe_str(row.get("company_url") or row.get("company_url_direct"))
-        company_logo = safe_str(
-            row.get("company_logo") or row.get("logo_photo_url") or row.get("company_logo_url")
-        )
-
-        seniority_level = detect_seniority_level(title, description)
-
-        job_entry = {
-            "url": url,
-            "title": title,
-            "description": description,
-            "tags": tags,
-            "pay_info": pay_info,
-            "company_name": company_name,
-            "company_url": company_url if company_url else None,
-            "company_logo": company_logo if company_logo else None,
-            "website_name": website_name,
-            "posted_days_ago": age_days,
-            "location": safe_str(row.get("location")),
-            "job_type": job_type,
-            "seniority_level": seniority_level,
-            "query_index": query_index,
-            "query_used": query,
-        }
-
-        job_entry["quality_score"] = calculate_quality_score(job_entry)
-        candidates.append(job_entry)
-
-    return candidates
-
-
-def execute_job_search(query_items: list[dict]):
+def execute_job_search():
+    query_items = load_and_prepare_queries()
     all_jobs = []
     seen_urls = set()
 
-    print(
-        f"--- Running Job Engine | Strictly <= $60,000/yr | Junior & Internship Only "
-        f"| Target: {TARGET_PER_QUERY} Jobs/Query | Max Age: 24h ---"
-    )
+    print(f"--- Running Job Scraper | STRICT REMOTE ONLY | Target: {TARGET_PER_QUERY} Jobs/Query ---")
 
     for i, item in enumerate(query_items):
         query = item["query"]
+        category = item["category"]
         job_type = item["job_type"]
-        print(f"\n[Query {i+1}/{len(query_items)}] [{job_type}] {query}")
 
-        raw_query_candidates = []
+        print(f"\n[Query {i+1}/{len(query_items)}] [{category}] [{job_type}]")
+        query_jobs = []
+
         for site in SITES:
-            site_candidates = scrape_site_candidates(
-                site=site,
-                query=query,
-                job_type=job_type,
-                query_index=i + 1,
-                seen_urls=seen_urls,
-            )
-            raw_query_candidates.extend(site_candidates)
+            if len(query_jobs) >= TARGET_PER_QUERY:
+                break
 
-        sorted_candidates = sorted(raw_query_candidates, key=lambda x: x["quality_score"], reverse=True)
-        top_10_jobs = sorted_candidates[:TARGET_PER_QUERY]
+            try:
+                jobs_df = scrape_jobs(
+                    site_name=[site],
+                    search_term=query,
+                    is_remote=True,  # Primary API level remote filter
+                    results_wanted=RESULTS_WANTED_PER_SITE,
+                    hours_old=HOURS_OLD,
+                    country_indeed="USA",
+                    description_format="markdown",
+                    linkedin_fetch_description=True,
+                )
+            except Exception as e:
+                print(f"  -> Error scraping {site}: {e}")
+                continue
 
-        for job in top_10_jobs:
-            seen_urls.add(job["url"])
-            del job["quality_score"]
-            all_jobs.append(job)
+            if jobs_df is None or jobs_df.empty:
+                continue
 
-            print(f"  [{job['website_name']}] [{job['seniority_level']}] {job['title']}")
-            print(f"      Link: {job['url']}")
-            print(f"      Pay: {job['pay_info']} | Company: {job['company_name']}")
+            for _, row in jobs_df.iterrows():
+                if len(query_jobs) >= TARGET_PER_QUERY:
+                    break
 
-        print(f"  -> Kept Top {len(top_10_jobs)} Junior/Intern Job(s) (<= $60k/yr) for this query.")
+                url = row.get("job_url")
+                if not url or pd.isna(url) or url in seen_urls:
+                    continue
+
+                # STRICT REMOTE FILTER
+                if not is_strictly_remote(row):
+                    continue
+
+                age_days = days_since(row.get("date_posted"))
+                if age_days is not None and age_days > MAX_AGE_DAYS:
+                    continue
+
+                seen_urls.add(url)
+                company_url = safe_str(row.get("company_url") or row.get("company_url_direct"))
+                company_logo = safe_str(
+                    row.get("company_logo") or row.get("logo_photo_url") or row.get("company_logo_url")
+                )
+
+                job_entry = {
+                    "url": url,
+                    "title": safe_str(row.get("title")),
+                    "description": safe_str(row.get("description"))[:2000],
+                    "company_name": safe_str(row.get("company"), "Unknown"),
+                    "company_url": company_url if company_url else None,
+                    "company_logo": company_logo if company_logo else None,
+                    "website_name": safe_str(row.get("site"), site),
+                    "location": safe_str(row.get("location"), "Remote"),
+                    "is_remote": True,
+                    "pay_info": format_pay(row),
+                    "category": category,
+                    "job_type": job_type,
+                    "posted_days_ago": age_days,
+                    "query_used": query,
+                }
+
+                query_jobs.append(job_entry)
+                print(f"  + [REMOTE] [{job_entry['website_name']}] {job_entry['title']} ({job_entry['company_name']})")
+
+        all_jobs.extend(query_jobs)
+        print(f"  -> Collected {len(query_jobs)}/10 remote jobs for query {i+1}")
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump({"jobs": all_jobs}, f, indent=4, ensure_ascii=False)
 
-    site_counts = {}
-    for job in all_jobs:
-        site_counts[job["website_name"]] = site_counts.get(job["website_name"], 0) + 1
-    split_str = ", ".join(f"{site}: {count}" for site, count in site_counts.items())
-
-    print(f"\nSaved total {len(all_jobs)} junior job(s) (<= $60k/yr, <= 24h old) to job_results_cache.json")
-    print(f"Site distribution -> {split_str}")
-    return all_jobs
+    print(f"\nSaved total {len(all_jobs)} strict remote jobs to '{OUTPUT_FILE}'")
 
 
 if __name__ == "__main__":
-    search_queries = load_and_prepare_queries()
-    execute_job_search(search_queries)
+    execute_job_search()
