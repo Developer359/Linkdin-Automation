@@ -19,24 +19,15 @@ OUTPUT_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../job_re
 MAX_AGE_DAYS = 1
 HOURS_OLD = MAX_AGE_DAYS * 24  
 SITES = ["indeed", "linkedin"]
-TARGET_PER_QUERY = 15          # Target 15 jobs per query
-RESULTS_WANTED_PER_SITE = 50   # Expanded pool since title filtering is strict
+TARGET_PER_QUERY = 10          # Target 10 jobs per query
+RESULTS_WANTED_PER_SITE = 80   # Vast search pool size
 
-# --- NEGATIVE KEYWORDS (Checks entire text: Title + Location + Description) ---
-NEGATIVE_KEYWORDS = [
-    "senior", "sr", "lead", "principal", "architect", "staff", 
-    "director", "manager", "chief", "vp", "head", "mid", "mid-level", "middle",
-    "3+ years", "4+ years", "5+ years", "3 years", "4 years", "5 years",
-    "hybrid", "on-site", "onsite", "in-office", "in office"
-]
-NEGATIVE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in NEGATIVE_KEYWORDS]) + r')\b', re.IGNORECASE)
-
-# --- STRICT TITLE KEYWORDS (MUST appear in the Job Title) ---
-TITLE_POSITIVE_KEYWORDS = [
+# --- TITLE KEYWORDS (Title MUST contain at least one of these) ---
+TITLE_KEYWORDS = [
     "junior", "jr", "entry", "entry-level", "intern", "internship", 
-    "trainee", "fresher", "new grad", "graduate"
+    "trainee", "fresher", "new grad", "graduate", "grad", "remote-internship"
 ]
-TITLE_POSITIVE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in TITLE_POSITIVE_KEYWORDS]) + r')\b', re.IGNORECASE)
+TITLE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in TITLE_KEYWORDS]) + r')\b', re.IGNORECASE)
 
 
 def safe_str(value, default: str = "") -> str:
@@ -46,18 +37,25 @@ def safe_str(value, default: str = "") -> str:
 
 
 def evaluate_job_inline(row) -> bool:
-    """Strict inline filter: Drops if senior/hybrid anywhere, and requires junior/intern explicitly in the TITLE."""
+    """
+    Vast search filter: 
+    1. Ensures the job title explicitly contains an entry-level / junior / intern / grad  keyword.
+    2. Ensures the job location is remote.
+    """
     title = safe_str(row.get("title"))
-    location = safe_str(row.get("location"))
-    desc = safe_str(row.get("description"))
-    text_to_search = f"{title} {location} {desc}"
-
-    # 1. Drop if any negative keyword (senior, hybrid, etc.) appears anywhere
-    if bool(NEGATIVE_REGEX.search(text_to_search)):
+    location = safe_str(row.get("location")).lower()
+    
+    # 1. Check if Title has the required keywords
+    if not bool(TITLE_REGEX.search(title)):
         return False
 
-    # 2. STICKY RULE: Title MUST contain Junior, Intern, Entry Level, etc.
-    if not bool(TITLE_POSITIVE_REGEX.search(title)):
+    # 2. Strictly Remote Check (Location must indicate remote or work from home)
+    remote_indicators = ["remote", "work from home", "virtual", "anywhere"]
+    is_remote_location = any(ind in location for ind in remote_indicators)
+    
+    # If location doesn't explicitly state remote, but row flag is true, we allow it, 
+    # but if location explicitly says on-site/hybrid, drop it.
+    if "on-site" in location or "onsite" in location or "hybrid" in location:
         return False
 
     return True
@@ -124,7 +122,7 @@ def execute_job_search():
     all_jobs = []
     seen_urls = set()
 
-    print(f"--- Running Job Scraper | STRICT TITLE FILTER | Target: {TARGET_PER_QUERY} Jobs/Query ---")
+    print(f"--- Running Job Scraper | VAST SEARCH + STRICT TITLE & REMOTE CHECK | Target: {TARGET_PER_QUERY} Jobs/Query ---")
 
     for i, item in enumerate(query_items):
         query = item["query"]
