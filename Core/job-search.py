@@ -21,7 +21,7 @@ HOURS_OLD = MAX_AGE_DAYS * 24  # Strictly under 24 hours
 
 SITES = ["indeed", "linkedin"]
 
-RESULTS_WANTED_PER_SITE = 30
+RESULTS_WANTED_PER_SITE = 35  # Increased candidate fetch pool to find more junior roles
 TARGET_PER_QUERY = 10
 
 # High-level and management keywords strictly blocked using regex word boundaries
@@ -49,14 +49,14 @@ def load_and_prepare_queries() -> list[dict]:
     for item in queries_data:
         if isinstance(item, dict):
             q = item.get("query", "").strip()
-            j_type = item.get("category") or item.get("job_type", "All Levels")
+            j_type = item.get("category") or item.get("job_type", "Junior / Internship / Mid")
             j_type = str(j_type).strip()
             if q:
                 formatted_queries.append({"query": q, "job_type": j_type})
         elif isinstance(item, str):
             q = item.strip()
             if q:
-                formatted_queries.append({"query": q, "job_type": "All Levels"})
+                formatted_queries.append({"query": q, "job_type": "Junior / Internship / Mid"})
 
     return formatted_queries
 
@@ -103,31 +103,36 @@ def is_valid_junior_or_mid(title: str) -> bool:
 
 
 def detect_seniority_level(title: str, description: str) -> str:
-    """Classifies job into Internship, Junior, or Mid-Level."""
+    """Classifies job into Junior, Internship, or Mid-Level."""
     text = f"{title} {description}".lower()
-    if re.search(r'\b(intern|internship|trainee)\b', text):
-        return "Internship"
     if re.search(r'\b(junior|jr|jr\.|entry|entry-level|associate)\b', text):
         return "Junior"
+    if re.search(r'\b(intern|internship|trainee)\b', text):
+        return "Internship"
     return "Mid-Level"
 
 
 def calculate_quality_score(job: dict) -> int:
-    """Scores jobs based on salary disclosure, perks, and detailed descriptions."""
+    """Ranks jobs with heavy priority on Junior and Internship roles."""
     score = 0
+    level = job.get("seniority_level")
     desc_lower = job.get("description", "").lower()
 
+    # Heavy priority weighting for Junior and Internship over Mid-Level
+    if level == "Junior":
+        score += 10
+    elif level == "Internship":
+        score += 8
+    elif level == "Mid-Level":
+        score += 1
+
+    # Salary disclosure bonus
     if job.get("pay_info") and job["pay_info"] != "Not specified":
         score += 3
 
+    # Perks bonus
     perks = ["health", "bonus", "equity", "pto", "vacation", "stipend", "401k", "insurance"]
     if any(perk in desc_lower for perk in perks):
-        score += 2
-
-    if job.get("seniority_level") in ["Internship", "Junior"]:
-        score += 2
-
-    if len(desc_lower) > 500:
         score += 2
 
     return score
@@ -173,6 +178,13 @@ def scrape_site_candidates(site: str, query: str, job_type: str, query_index: in
         description = safe_str(row.get("description"))[:2000]
         tags = [w for w in title.split() if len(w) > 3]
         pay_info = format_pay(row)
+
+        # Company Logo & URL extractions from JobSpy
+        company_url = safe_str(row.get("company_url") or row.get("company_url_direct"))
+        company_logo = safe_str(
+            row.get("company_logo") or row.get("logo_photo_url") or row.get("company_logo_url")
+        )
+
         seniority_level = detect_seniority_level(title, description)
 
         job_entry = {
@@ -182,6 +194,8 @@ def scrape_site_candidates(site: str, query: str, job_type: str, query_index: in
             "tags": tags,
             "pay_info": pay_info,
             "company_name": company_name,
+            "company_url": company_url if company_url else None,
+            "company_logo": company_logo if company_logo else None,
             "website_name": website_name,
             "posted_days_ago": age_days,
             "location": safe_str(row.get("location")),
@@ -202,8 +216,8 @@ def execute_job_search(query_items: list[dict]):
     seen_urls = set()
 
     print(
-        f"--- Running Remote Job Engine | Filter: Internship, Junior & Mid-Level Only "
-        f"| Target: {TARGET_PER_QUERY} High-Quality Jobs/Query | Max Age: 24h ---"
+        f"--- Running Remote Job Engine | Priority: Junior & Internship "
+        f"| Target: {TARGET_PER_QUERY} Jobs/Query | Max Age: 24h ---"
     )
 
     for i, item in enumerate(query_items):
@@ -222,6 +236,7 @@ def execute_job_search(query_items: list[dict]):
             )
             raw_query_candidates.extend(site_candidates)
 
+        # Sort descending by quality score so Junior and Internship sort first
         sorted_candidates = sorted(raw_query_candidates, key=lambda x: x["quality_score"], reverse=True)
         top_10_jobs = sorted_candidates[:TARGET_PER_QUERY]
 
@@ -234,7 +249,7 @@ def execute_job_search(query_items: list[dict]):
             print(f"      Link: {job['url']}")
             print(f"      Pay: {job['pay_info']} | Company: {job['company_name']}")
 
-        print(f"  -> Kept Top {len(top_10_jobs)} High-Quality Remote Job(s) for this query.")
+        print(f"  -> Kept Top {len(top_10_jobs)} Remote Job(s) (Junior/Intern Prioritized) for this query.")
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump({"jobs": all_jobs}, f, indent=4, ensure_ascii=False)
@@ -244,7 +259,7 @@ def execute_job_search(query_items: list[dict]):
         site_counts[job["website_name"]] = site_counts.get(job["website_name"], 0) + 1
     split_str = ", ".join(f"{site}: {count}" for site, count in site_counts.items())
 
-    print(f"\nSaved total {len(all_jobs)} high-quality job(s) (<= 24h old) to job_results_cache.json")
+    print(f"\nSaved total {len(all_jobs)} job(s) (<= 24h old) to job_results_cache.json")
     print(f"Site distribution -> {split_str}")
     return all_jobs
 
