@@ -19,24 +19,24 @@ OUTPUT_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../job_re
 MAX_AGE_DAYS = 1
 HOURS_OLD = MAX_AGE_DAYS * 24  
 SITES = ["indeed", "linkedin"]
-TARGET_PER_QUERY = 5          # Target 15 jobs per query
-RESULTS_WANTED_PER_SITE = 40   # Optimized pool size per site
+TARGET_PER_QUERY = 15          # Target 15 jobs per query
+RESULTS_WANTED_PER_SITE = 50   # Expanded pool since title filtering is strict
 
-# --- WHOLE-WORD REGEX KEYWORDS (Prevents substring false rejections) ---
+# --- NEGATIVE KEYWORDS (Checks entire text: Title + Location + Description) ---
 NEGATIVE_KEYWORDS = [
     "senior", "sr", "lead", "principal", "architect", "staff", 
     "director", "manager", "chief", "vp", "head", "mid", "mid-level", "middle",
-    "3+ years", "4+ years", "5+ years", "3 years", "4 years", "5 years"
+    "3+ years", "4+ years", "5+ years", "3 years", "4 years", "5 years",
+    "hybrid", "on-site", "onsite", "in-office", "in office"
 ]
 NEGATIVE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in NEGATIVE_KEYWORDS]) + r')\b', re.IGNORECASE)
 
-POSITIVE_KEYWORDS = [
+# --- STRICT TITLE KEYWORDS (MUST appear in the Job Title) ---
+TITLE_POSITIVE_KEYWORDS = [
     "junior", "jr", "entry", "entry-level", "intern", "internship", 
-    "trainee", "fresher", "new grad", "graduate",
-    "0 to 1 year", "0 to 2 years", "0-1 year", "0-2 years",
-    "1 year experience", "2 years experience", "1-2 years"
+    "trainee", "fresher", "new grad", "graduate"
 ]
-POSITIVE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in POSITIVE_KEYWORDS]) + r')\b', re.IGNORECASE)
+TITLE_POSITIVE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in TITLE_POSITIVE_KEYWORDS]) + r')\b', re.IGNORECASE)
 
 
 def safe_str(value, default: str = "") -> str:
@@ -46,18 +46,18 @@ def safe_str(value, default: str = "") -> str:
 
 
 def evaluate_job_inline(row) -> bool:
-    """Fast inline regex filter checking for whole-word junior/senior matches."""
+    """Strict inline filter: Drops if senior/hybrid anywhere, and requires junior/intern explicitly in the TITLE."""
     title = safe_str(row.get("title"))
     location = safe_str(row.get("location"))
     desc = safe_str(row.get("description"))
     text_to_search = f"{title} {location} {desc}"
 
-    # 1. Reject if any senior/hybrid keyword matches as a whole word
+    # 1. Drop if any negative keyword (senior, hybrid, etc.) appears anywhere
     if bool(NEGATIVE_REGEX.search(text_to_search)):
         return False
 
-    # 2. Must contain at least one junior/entry keyword as a whole word
-    if not bool(POSITIVE_REGEX.search(text_to_search)):
+    # 2. STICKY RULE: Title MUST contain Junior, Intern, Entry Level, etc.
+    if not bool(TITLE_POSITIVE_REGEX.search(title)):
         return False
 
     return True
@@ -124,7 +124,7 @@ def execute_job_search():
     all_jobs = []
     seen_urls = set()
 
-    print(f"--- Running Job Scraper | FAST REGEX FILTER | Target: {TARGET_PER_QUERY} Jobs/Query ---")
+    print(f"--- Running Job Scraper | STRICT TITLE FILTER | Target: {TARGET_PER_QUERY} Jobs/Query ---")
 
     for i, item in enumerate(query_items):
         query = item["query"]
@@ -198,7 +198,7 @@ def execute_job_search():
                 print(f"  + [PASSED] [{job_entry['website_name']}] {job_entry['title']} ({job_entry['company_name']})")
 
         all_jobs.extend(query_jobs)
-        print(f"  -> Collected {len(query_jobs)}/{TARGET_PER_QUERY} filtered jobs for query {i+1}")
+        print(f"  -> Collected {len(query_jobs)}/{TARGET_PER_QUERY} verified jobs for query {i+1}")
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump({"jobs": all_jobs}, f, indent=4, ensure_ascii=False)
