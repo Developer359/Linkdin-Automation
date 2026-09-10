@@ -2,7 +2,6 @@
 .env
 
 # Cache & Temporary JSON Files
-query_cache.json
 job_results_cache.json
 Core/temp_organized_resume.json
 

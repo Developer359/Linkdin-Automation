@@ -1,0 +1,29 @@
+{
+  "queries": [
+    {
+      "category": "Frontend Developer",
+      "query": "(\"Frontend Developer\" OR \"Frontend Engineer\" OR \"React Developer\") AND (\"React\" OR \"Next.js\" OR \"TypeScript\")",
+      "job_type": "All Levels"
+    },
+    {
+      "category": "Fullstack Developer",
+      "query": "(\"Full Stack Developer\" OR \"Full Stack Engineer\" OR \"MERN Developer\") AND (\"React\" OR \"Node.js\" OR \"Next.js\")",
+      "job_type": "All Levels"
+    },
+    {
+      "category": "AI Engineer",
+      "query": "(\"AI Engineer\" OR \"AI Developer\" OR \"Machine Learning Engineer\") AND (\"Python\" OR \"LangChain\" OR \"LLM\")",
+      "job_type": "All Levels"
+    },
+    {
+      "category": "UI/UX Designer",
+      "query": "(\"UI/UX Designer\" OR \"UI UX Designer\" OR \"Product Designer\") AND (\"Figma\" OR \"Wireframing\")",
+      "job_type": "All Levels"
+    },
+    {
+      "category": "Mobile Developer",
+      "query": "(\"Mobile Developer\" OR \"React Native Developer\" OR \"Flutter Developer\") AND (\"React Native\" OR \"Flutter\")",
+      "job_type": "All Levels"
+    }
+  ]
+}
