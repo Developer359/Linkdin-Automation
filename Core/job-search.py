@@ -1,14 +1,12 @@
 import os
 import json
+import re
 import warnings
 import logging
 from datetime import datetime, date
 import pandas as pd
 from dotenv import load_dotenv
 from jobspy import scrape_jobs
-
-# Import your new filter pipeline
-import text_filter
 
 warnings.filterwarnings("ignore")
 logging.getLogger().setLevel(logging.ERROR)
@@ -21,8 +19,48 @@ OUTPUT_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../job_re
 MAX_AGE_DAYS = 1
 HOURS_OLD = MAX_AGE_DAYS * 24  
 SITES = ["indeed", "linkedin"]
-TARGET_PER_QUERY = 5
-RESULTS_WANTED_PER_SITE = 50   # Increased to 50 to maintain a high enough pool for the strict filter
+TARGET_PER_QUERY = 5          # Target 15 jobs per query
+RESULTS_WANTED_PER_SITE = 40   # Optimized pool size per site
+
+# --- WHOLE-WORD REGEX KEYWORDS (Prevents substring false rejections) ---
+NEGATIVE_KEYWORDS = [
+    "senior", "sr", "lead", "principal", "architect", "staff", 
+    "director", "manager", "chief", "vp", "head", "mid", "mid-level", "middle",
+    "3+ years", "4+ years", "5+ years", "3 years", "4 years", "5 years"
+]
+NEGATIVE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in NEGATIVE_KEYWORDS]) + r')\b', re.IGNORECASE)
+
+POSITIVE_KEYWORDS = [
+    "junior", "jr", "entry", "entry-level", "intern", "internship", 
+    "trainee", "fresher", "new grad", "graduate",
+    "0 to 1 year", "0 to 2 years", "0-1 year", "0-2 years",
+    "1 year experience", "2 years experience", "1-2 years"
+]
+POSITIVE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in POSITIVE_KEYWORDS]) + r')\b', re.IGNORECASE)
+
+
+def safe_str(value, default: str = "") -> str:
+    if value is None or pd.isna(value):
+        return default
+    return str(value)
+
+
+def evaluate_job_inline(row) -> bool:
+    """Fast inline regex filter checking for whole-word junior/senior matches."""
+    title = safe_str(row.get("title"))
+    location = safe_str(row.get("location"))
+    desc = safe_str(row.get("description"))
+    text_to_search = f"{title} {location} {desc}"
+
+    # 1. Reject if any senior/hybrid keyword matches as a whole word
+    if bool(NEGATIVE_REGEX.search(text_to_search)):
+        return False
+
+    # 2. Must contain at least one junior/entry keyword as a whole word
+    if not bool(POSITIVE_REGEX.search(text_to_search)):
+        return False
+
+    return True
 
 
 def load_and_prepare_queries() -> list[dict]:
@@ -86,7 +124,7 @@ def execute_job_search():
     all_jobs = []
     seen_urls = set()
 
-    print(f"--- Running Job Scraper | STRICT PIPELINE | Target: {TARGET_PER_QUERY} Jobs/Query ---")
+    print(f"--- Running Job Scraper | FAST REGEX FILTER | Target: {TARGET_PER_QUERY} Jobs/Query ---")
 
     for i, item in enumerate(query_items):
         query = item["query"]
@@ -126,9 +164,7 @@ def execute_job_search():
                 if not url or pd.isna(url) or url in seen_urls:
                     continue
 
-                # --- PIPELINE ROUTING ---
-                # Passes the row to text_filter.py for real-time evaluation
-                if not text_filter.evaluate_job(row):
+                if not evaluate_job_inline(row):
                     continue
 
                 age_days = days_since(row.get("date_posted"))
@@ -136,20 +172,20 @@ def execute_job_search():
                     continue
 
                 seen_urls.add(url)
-                company_url = text_filter.safe_str(row.get("company_url") or row.get("company_url_direct"))
-                company_logo = text_filter.safe_str(
+                company_url = safe_str(row.get("company_url") or row.get("company_url_direct"))
+                company_logo = safe_str(
                     row.get("company_logo") or row.get("logo_photo_url") or row.get("company_logo_url")
                 )
 
                 job_entry = {
                     "url": url,
-                    "title": text_filter.safe_str(row.get("title")),
-                    "description": text_filter.safe_str(row.get("description"))[:2000],
-                    "company_name": text_filter.safe_str(row.get("company"), "Unknown"),
+                    "title": safe_str(row.get("title")),
+                    "description": safe_str(row.get("description")),  # Full description saved
+                    "company_name": safe_str(row.get("company"), "Unknown"),
                     "company_url": company_url if company_url else None,
                     "company_logo": company_logo if company_logo else None,
-                    "website_name": text_filter.safe_str(row.get("site"), site),
-                    "location": text_filter.safe_str(row.get("location"), "Remote"),
+                    "website_name": safe_str(row.get("site"), site),
+                    "location": safe_str(row.get("location"), "Remote"),
                     "is_remote": True,
                     "pay_info": format_pay(row),
                     "category": category,
