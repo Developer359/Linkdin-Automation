@@ -2,28 +2,28 @@
   "queries": [
     {
       "category": "Frontend Developer",
-      "query": "(\"Frontend Developer\" OR \"Frontend Engineer\" OR \"React Developer\") AND (\"React\" OR \"Next.js\" OR \"TypeScript\")",
-      "job_type": "All Levels"
+      "query": "(\"Frontend Developer\" OR \"Frontend Engineer\" OR \"React Developer\") AND (\"React\" OR \"Next.js\" OR \"TypeScript\") AND (\"Junior\" OR \"Intern\" OR \"Entry Level\") NOT (\"Senior\" OR \"Lead\" OR \"Manager\" OR \"Director\" OR \"Architect\")",
+      "job_type": "Junior / Entry Level"
     },
     {
       "category": "Fullstack Developer",
-      "query": "(\"Full Stack Developer\" OR \"Full Stack Engineer\" OR \"MERN Developer\") AND (\"React\" OR \"Node.js\" OR \"Next.js\")",
-      "job_type": "All Levels"
+      "query": "(\"Full Stack Developer\" OR \"Full Stack Engineer\" OR \"MERN Developer\") AND (\"React\" OR \"Node.js\" OR \"Next.js\") AND (\"Junior\" OR \"Intern\" OR \"Entry Level\") NOT (\"Senior\" OR \"Lead\" OR \"Manager\" OR \"Director\" OR \"Architect\")",
+      "job_type": "Junior / Entry Level"
     },
     {
       "category": "AI Engineer",
-      "query": "(\"AI Engineer\" OR \"AI Developer\" OR \"Machine Learning Engineer\") AND (\"Python\" OR \"LangChain\" OR \"LLM\")",
-      "job_type": "All Levels"
+      "query": "(\"AI Engineer\" OR \"AI Developer\" OR \"Machine Learning Engineer\") AND (\"Python\" OR \"LangChain\" OR \"LLM\") AND (\"Junior\" OR \"Intern\" OR \"Entry Level\") NOT (\"Senior\" OR \"Lead\" OR \"Manager\" OR \"Director\" OR \"Architect\")",
+      "job_type": "Junior / Entry Level"
     },
     {
       "category": "UI/UX Designer",
-      "query": "(\"UI/UX Designer\" OR \"UI UX Designer\" OR \"Product Designer\") AND (\"Figma\" OR \"Wireframing\")",
-      "job_type": "All Levels"
+      "query": "(\"UI/UX Designer\" OR \"UI UX Designer\" OR \"Product Designer\") AND (\"Figma\" OR \"Wireframing\") AND (\"Junior\" OR \"Intern\" OR \"Entry Level\") NOT (\"Senior\" OR \"Lead\" OR \"Manager\" OR \"Director\" OR \"Architect\")",
+      "job_type": "Junior / Entry Level"
     },
     {
       "category": "Mobile Developer",
-      "query": "(\"Mobile Developer\" OR \"React Native Developer\" OR \"Flutter Developer\") AND (\"React Native\" OR \"Flutter\")",
-      "job_type": "All Levels"
+      "query": "(\"Mobile Developer\" OR \"React Native Developer\" OR \"Flutter Developer\") AND (\"React Native\" OR \"Flutter\") AND (\"Junior\" OR \"Intern\" OR \"Entry Level\") NOT (\"Senior\" OR \"Lead\" OR \"Manager\" OR \"Director\" OR \"Architect\")",
+      "job_type": "Junior / Entry Level"
     }
   ]
 }
