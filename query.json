@@ -2,27 +2,27 @@
   "queries": [
     {
       "category": "Frontend Developer",
-      "query": "Junior Frontend Developer React Next.js",
+      "query": "Junior Frontend Developer React Next.js TypeScript JavaScript",
       "job_type": "Junior / Entry Level"
     },
     {
       "category": "Fullstack Developer",
-      "query": " Junior Full Stack Developer MERN",
+      "query": "Junior Full Stack Developer MERN Node.js TypeScript",
       "job_type": "Junior / Entry Level"
     },
     {
       "category": "AI Engineer",
-      "query": "Junior AI Engineer Python LangChain",
+      "query": "Junior AI Engineer Python LangChain LLM Machine Learning",
       "job_type": "Junior / Entry Level"
     },
     {
       "category": "UI/UX Designer",
-      "query": "Junior UI UX Product Designer Figma",
+      "query": "Junior UI UX Product Designer Figma Wireframe",
       "job_type": "Junior / Entry Level"
     },
     {
       "category": "Mobile Developer",
-      "query": "Junior React Native Flutter Developer",
+      "query": "Junior React Native Flutter Mobile Developer Expo",
       "job_type": "Junior / Entry Level"
     }
   ]
