@@ -4,6 +4,8 @@ import re
 import warnings
 import logging
 from datetime import datetime, date
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 import pandas as pd
 from dotenv import load_dotenv
 from jobspy import scrape_jobs
@@ -17,17 +19,52 @@ CACHE_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../query.j
 OUTPUT_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../job_results_cache.json"))
 
 MAX_AGE_DAYS = 1
-HOURS_OLD = MAX_AGE_DAYS * 24  
+HOURS_OLD = MAX_AGE_DAYS * 24
+FALLBACK_HOURS_OLD = HOURS_OLD * 3      # used only if a query comes up short
+FALLBACK_MAX_AGE_DAYS = MAX_AGE_DAYS * 3
 SITES = ["indeed", "linkedin"]
-TARGET_PER_QUERY = 10          # Target 10 jobs per query
-RESULTS_WANTED_PER_SITE = 80   # Vast search pool size
+TARGET_PER_QUERY = 10
+RESULTS_WANTED_PER_SITE = 80
 
-# --- TITLE KEYWORDS (Title MUST contain at least one of these) ---
+# --- SENIORITY KEYWORDS (Title MUST contain at least one of these) ---
 TITLE_KEYWORDS = [
-    "junior", "jr", "entry", "entry-level", "intern", "internship", 
+    "junior", "jr", "entry", "entry-level", "intern", "internship",
     "trainee", "fresher", "new grad", "graduate", "grad", "remote-internship"
 ]
 TITLE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in TITLE_KEYWORDS]) + r')\b', re.IGNORECASE)
+
+# --- ROLE KEYWORDS (Title must ALSO be relevant to what the query actually asked for) ---
+# Keyed by category so "Mobile Developer" doesn't pull generic "Software Engineer" postings.
+CATEGORY_ROLE_KEYWORDS = {
+    "Frontend, Full Stack & Backend": [
+        "frontend", "front-end", "front end", "backend", "back-end", "back end",
+        "full stack", "fullstack", "full-stack", "web developer", "software engineer",
+        "software developer", "react", "next.js", "nextjs", "node", "javascript", "typescript"
+    ],
+    "AI & Data Engineer": [
+        "ai", "artificial intelligence", "machine learning", "ml engineer", "data scientist",
+        "data analyst", "data engineer", "llm", "langchain", "automation engineer", "python developer"
+    ],
+    "Mobile Developer": [
+        "mobile", "ios", "android", "swift", "kotlin", "react native", "flutter", "expo",
+        "app developer", "mobile developer", "mobile engineer"
+    ],
+    "UI/UX & Graphic Designer": [
+        "ui", "ux", "ui/ux", "product design", "product designer", "graphic design",
+        "graphic designer", "figma", "wireframe", "visual designer", "designer"
+    ],
+    "Software & DevOps Engineer": [
+        "devops", "dev ops", "cloud engineer", "site reliability", "sre", "platform engineer",
+        "infrastructure", "software engineer", "software developer", "docker", "kubernetes", "aws"
+    ],
+}
+
+# Generic words to ignore when deriving role keywords automatically for an unlisted category
+STOPWORDS = {
+    "junior", "jr", "entry", "entry-level", "intern", "internship", "trainee", "fresher",
+    "new", "grad", "graduate", "remote-internship", "developer", "engineer", "and", "the",
+    "for", "with", "of", "a", "an"
+}
 
 
 def safe_str(value, default: str = "") -> str:
@@ -36,25 +73,29 @@ def safe_str(value, default: str = "") -> str:
     return str(value)
 
 
-def evaluate_job_inline(row) -> bool:
+def derive_role_keywords(query: str) -> list[str]:
+    """Fallback: pull meaningful terms out of the query itself if category isn't in the map."""
+    words = re.findall(r"[A-Za-z][A-Za-z0-9+\.#]*", query)
+    keywords = [w.lower() for w in words if w.lower() not in STOPWORDS and len(w) > 2]
+    return keywords or [query.lower()]
+
+
+def evaluate_job_inline(row, role_keywords: list[str]) -> bool:
     """
-    Vast search filter: 
-    1. Ensures the job title explicitly contains an entry-level / junior / intern / grad  keyword.
-    2. Ensures the job location is remote.
+    1. Title must contain a seniority keyword (junior/entry/intern/grad...).
+    2. Title must ALSO be relevant to the role the query was actually about.
+    3. Location must be remote (reject explicit on-site/hybrid).
     """
     title = safe_str(row.get("title"))
+    title_lower = title.lower()
     location = safe_str(row.get("location")).lower()
-    
-    # 1. Check if Title has the required keywords
+
     if not bool(TITLE_REGEX.search(title)):
         return False
 
-    # 2. Strictly Remote Check (Location must indicate remote or work from home)
-    remote_indicators = ["remote", "work from home", "virtual", "anywhere"]
-    is_remote_location = any(ind in location for ind in remote_indicators)
-    
-    # If location doesn't explicitly state remote, but row flag is true, we allow it, 
-    # but if location explicitly says on-site/hybrid, drop it.
+    if not any(kw in title_lower for kw in role_keywords):
+        return False
+
     if "on-site" in location or "onsite" in location or "hybrid" in location:
         return False
 
@@ -117,83 +158,103 @@ def format_pay(row) -> str:
     return f"{pay_str} / {interval}".strip(" /") if interval else pay_str
 
 
+def scrape_site(site: str, query: str, hours_old: int):
+    try:
+        return site, scrape_jobs(
+            site_name=[site],
+            search_term=query,
+            is_remote=True,
+            results_wanted=RESULTS_WANTED_PER_SITE,
+            hours_old=hours_old,
+            country_indeed="USA",
+            linkedin_fetch_description=False,  # kept off for speed
+        )
+    except Exception as e:
+        print(f"  -> Error scraping {site}: {e}")
+        return site, None
+
+
+def build_job_entry(row, site, category, job_type, query, age_days):
+    company_url = safe_str(row.get("company_url") or row.get("company_url_direct"))
+    company_logo = safe_str(
+        row.get("company_logo") or row.get("logo_photo_url") or row.get("company_logo_url")
+    )
+    return {
+        "url": row.get("job_url"),
+        "title": safe_str(row.get("title")),
+        "description": "",  # Description skipped per request
+        "company_name": safe_str(row.get("company"), "Unknown"),
+        "company_url": company_url if company_url else None,
+        "company_logo": company_logo if company_logo else None,
+        "website_name": safe_str(row.get("site"), site),
+        "location": safe_str(row.get("location"), "Remote"),
+        "is_remote": True,
+        "pay_info": format_pay(row),
+        "category": category,
+        "job_type": job_type,
+        "posted_days_ago": age_days,
+        "query_used": query,
+    }
+
+
+def collect_from_df(jobs_df, site, category, job_type, query, role_keywords, seen_urls,
+                     query_jobs, max_age_days):
+    if jobs_df is None or jobs_df.empty:
+        return
+
+    for _, row in jobs_df.iterrows():
+        if len(query_jobs) >= TARGET_PER_QUERY:
+            break
+
+        url = row.get("job_url")
+        if not url or pd.isna(url) or url in seen_urls:
+            continue
+
+        if not evaluate_job_inline(row, role_keywords):
+            continue
+
+        age_days = days_since(row.get("date_posted"))
+        if age_days is not None and age_days > max_age_days:
+            continue
+
+        seen_urls.add(url)
+        job_entry = build_job_entry(row, site, category, job_type, query, age_days)
+        query_jobs.append(job_entry)
+        print(f"  + [PASSED] [{job_entry['website_name']}] {job_entry['title']} ({job_entry['company_name']})")
+
+
 def execute_job_search():
     query_items = load_and_prepare_queries()
     all_jobs = []
     seen_urls = set()
 
-    print(f"--- Running Job Scraper | VAST SEARCH + STRICT TITLE & REMOTE CHECK | Target: {TARGET_PER_QUERY} Jobs/Query ---")
+    print(f"--- Running Job Scraper | Role-Matched + Parallel Sites Per Query | Target: {TARGET_PER_QUERY} Jobs/Query ---")
 
     for i, item in enumerate(query_items):
         query = item["query"]
         category = item["category"]
         job_type = item["job_type"]
+        role_keywords = CATEGORY_ROLE_KEYWORDS.get(category, derive_role_keywords(query))
 
         print(f"\n[Query {i+1}/{len(query_items)}] [{category}] [{job_type}]")
         query_jobs = []
 
-        for site in SITES:
-            if len(query_jobs) >= TARGET_PER_QUERY:
-                break
+        # --- Pass 1: normal recency window, both sites fetched in parallel ---
+        with ThreadPoolExecutor(max_workers=len(SITES)) as executor:
+            futures = [executor.submit(scrape_site, site, query, HOURS_OLD) for site in SITES]
+            for future in as_completed(futures):
+                site, jobs_df = future.result()
+                collect_from_df(jobs_df, site, category, job_type, query, role_keywords,
+                                 seen_urls, query_jobs, MAX_AGE_DAYS)
 
-            try:
-                jobs_df = scrape_jobs(
-                    site_name=[site],
-                    search_term=query,
-                    is_remote=True,
-                    results_wanted=RESULTS_WANTED_PER_SITE,
-                    hours_old=HOURS_OLD,
-                    country_indeed="USA",
-                    description_format="markdown",
-                    linkedin_fetch_description=True,
-                )
-            except Exception as e:
-                print(f"  -> Error scraping {site}: {e}")
-                continue
-
-            if jobs_df is None or jobs_df.empty:
-                continue
-
-            for _, row in jobs_df.iterrows():
-                if len(query_jobs) >= TARGET_PER_QUERY:
-                    break
-
-                url = row.get("job_url")
-                if not url or pd.isna(url) or url in seen_urls:
-                    continue
-
-                if not evaluate_job_inline(row):
-                    continue
-
-                age_days = days_since(row.get("date_posted"))
-                if age_days is not None and age_days > MAX_AGE_DAYS:
-                    continue
-
-                seen_urls.add(url)
-                company_url = safe_str(row.get("company_url") or row.get("company_url_direct"))
-                company_logo = safe_str(
-                    row.get("company_logo") or row.get("logo_photo_url") or row.get("company_logo_url")
-                )
-
-                job_entry = {
-                    "url": url,
-                    "title": safe_str(row.get("title")),
-                    "description": safe_str(row.get("description")),  # Full description saved
-                    "company_name": safe_str(row.get("company"), "Unknown"),
-                    "company_url": company_url if company_url else None,
-                    "company_logo": company_logo if company_logo else None,
-                    "website_name": safe_str(row.get("site"), site),
-                    "location": safe_str(row.get("location"), "Remote"),
-                    "is_remote": True,
-                    "pay_info": format_pay(row),
-                    "category": category,
-                    "job_type": job_type,
-                    "posted_days_ago": age_days,
-                    "query_used": query,
-                }
-
-                query_jobs.append(job_entry)
-                print(f"  + [PASSED] [{job_entry['website_name']}] {job_entry['title']} ({job_entry['company_name']})")
+        # --- Pass 2 (fallback): only runs if still short, widens the recency window ---
+        if len(query_jobs) < TARGET_PER_QUERY:
+            with ThreadPoolExecutor(max_workers=len(SITES)) as executor:
+                futures = [executor.submit(scrape_site, site, query, FALLBACK_HOURS_OLD) for site in SITES]
+                for future in as_completed(futures):
+                    site, jobs_df = future.result()
+                    collect_from_df(jobs_df, site, category, job_type, query, role_keywords,
+                                     seen_urls, query_jobs, FALLBACK_MAX_AGE_DAYS)
 
         all_jobs.extend(query_jobs)
         print(f"  -> Collected {len(query_jobs)}/{TARGET_PER_QUERY} verified jobs for query {i+1}")
