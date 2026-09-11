@@ -40,7 +40,7 @@ CATEGORY_ROLE_KEYWORDS = {
     "Frontend, Full Stack & Backend": [
         "frontend", "front-end", "front end", "backend", "back-end", "back end",
         "full stack", "fullstack", "full-stack", "web developer", "java",
-        "software developer", "react", "next.js", "nextjs", "node", "javascript", "typescript"
+        "Html", "react", "next.js", "nextjs", "node", "javascript", "typescript"
     ],
     "AI & Data Engineer": [
         "ai", "artificial intelligence", "machine learning", "ml engineer", "data scientist",
