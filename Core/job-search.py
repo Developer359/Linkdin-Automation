@@ -24,7 +24,8 @@ FALLBACK_HOURS_OLD = HOURS_OLD * 3      # used only if a query comes up short
 FALLBACK_MAX_AGE_DAYS = MAX_AGE_DAYS * 3
 SITES = ["indeed", "linkedin"]
 TARGET_PER_QUERY = 10
-RESULTS_WANTED_PER_SITE = 80
+RESULTS_WANTED_PER_SITE = 40     # was 80 — fewer pages to paginate through = fewer Indeed timeouts, faster overall
+SITE_RETRY_ATTEMPTS = 3          # retry a site immediately if it errors (timeout, connection reset, etc.)
 
 # --- SENIORITY KEYWORDS (Title MUST contain at least one of these) ---
 TITLE_KEYWORDS = [
@@ -38,7 +39,7 @@ TITLE_REGEX = re.compile(r'\b(' + '|'.join([re.escape(k) for k in TITLE_KEYWORDS
 CATEGORY_ROLE_KEYWORDS = {
     "Frontend, Full Stack & Backend": [
         "frontend", "front-end", "front end", "backend", "back-end", "back end",
-        "full stack", "fullstack", "full-stack", "web developer", "software engineer",
+        "full stack", "fullstack", "full-stack", "web developer", "java",
         "software developer", "react", "next.js", "nextjs", "node", "javascript", "typescript"
     ],
     "AI & Data Engineer": [
@@ -159,19 +160,25 @@ def format_pay(row) -> str:
 
 
 def scrape_site(site: str, query: str, hours_old: int):
-    try:
-        return site, scrape_jobs(
-            site_name=[site],
-            search_term=query,
-            is_remote=True,
-            results_wanted=RESULTS_WANTED_PER_SITE,
-            hours_old=hours_old,
-            country_indeed="USA",
-            linkedin_fetch_description=False,  # kept off for speed
-        )
-    except Exception as e:
-        print(f"  -> Error scraping {site}: {e}")
-        return site, None
+    last_error = None
+    for attempt in range(1, SITE_RETRY_ATTEMPTS + 1):
+        try:
+            return site, scrape_jobs(
+                site_name=[site],
+                search_term=query,
+                is_remote=True,
+                results_wanted=RESULTS_WANTED_PER_SITE,
+                hours_old=hours_old,
+                country_indeed="USA",
+                linkedin_fetch_description=False,  # kept off for speed
+            )
+        except Exception as e:
+            last_error = e
+            if attempt < SITE_RETRY_ATTEMPTS:
+                print(f"  -> {site} attempt {attempt} failed ({e}), retrying...")
+            continue
+    print(f"  -> Error scraping {site} after {SITE_RETRY_ATTEMPTS} attempts: {last_error}")
+    return site, None
 
 
 def build_job_entry(row, site, category, job_type, query, age_days):
