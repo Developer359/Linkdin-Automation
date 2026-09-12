@@ -40,11 +40,11 @@ CATEGORY_ROLE_KEYWORDS = {
     "Frontend, Full Stack & Backend": [
         "frontend", "front-end", "front end", "backend", "back-end", "back end",
         "full stack", "fullstack", "full-stack", "web developer", "java",
-        "Html", "react", "next.js", "nextjs", "node", "javascript", "typescript"
+        "Html", "react", "next.js", "nextjs", "node", "javascript", "typescript",".net", "ruby", "php", "c#", "c++", "golang", "go"
     ],
     "AI & Data Engineer": [
         "ai", "artificial intelligence", "machine learning", "ml engineer", "data scientist",
-        "data analyst", "data engineer", "llm", "langchain", "automation engineer", "python developer"
+        "data analyst", "data engineer", "llm", "langchain", "automation engineer", "python", "r", "sql", "tensorflow", "pytorch", "keras", "scikit-learn"
     ],
     "Mobile Developer": [
         "mobile", "ios", "android", "swift", "kotlin", "react native", "flutter", "expo",
