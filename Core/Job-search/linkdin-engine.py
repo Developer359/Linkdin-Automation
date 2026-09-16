@@ -38,9 +38,13 @@ def clean_text(text: str) -> str:
 
 def build_search_term(category: str) -> str:
     if category in SEARCH_QUERIES:
-        return SEARCH_QUERIES[category]
-    keywords = CATEGORY_ROLE_KEYWORDS.get(category, [category])
-    return " OR ".join(f'"{kw}"' if " " in kw else kw for kw in keywords[:5])
+        base = SEARCH_QUERIES[category]
+    else:
+        keywords = CATEGORY_ROLE_KEYWORDS.get(category, [category])
+        base = " OR ".join(f'"{kw}"' if " " in kw else kw for kw in keywords[:5])
+    
+    # Automatically add junior, mid, entry, and intern terms to the search query
+    return f"{base} (junior OR entry OR intern OR mid OR associate)"
 
 
 def run_linkedin_engine():
@@ -57,7 +61,7 @@ def run_linkedin_engine():
         print(f"    Searching LinkedIn for: {search_term}")
 
         try:
-            # Fetch 15 raw jobs to give enough room for strict deduplication
+            # Fetch 15 raw jobs to give enough room for strict deduplication & seniority filtering
             df = scrape_jobs(
                 site_name=["linkedin"],
                 search_term=search_term,
@@ -79,6 +83,11 @@ def run_linkedin_engine():
                     job_url = str(row.get("job_url", "") or "").strip()
 
                     if not raw_title or not raw_company:
+                        continue
+
+                    # Filter out senior, manager, lead, director, etc., from titles
+                    title_lower = raw_title.lower()
+                    if any(bad_word in title_lower for bad_word in ["senior", "sr.", "manager", "lead", "director", "head", "principal", "vp"]):
                         continue
 
                     cleaned_title = clean_text(raw_title)
@@ -118,7 +127,7 @@ def run_linkedin_engine():
             with open(output_file_path, "w", encoding="utf-8") as f:
                 json.dump(jobs_list, f, indent=4, ensure_ascii=False)
 
-            print(f"    [✓] Scraped {len(jobs_list)} 100% unique jobs -> Saved to Data/Job-Result-cache/{filename}\n")
+            print(f"    [✓] Scraped {len(jobs_list)} 100% unique junior/mid/intern jobs -> Saved to Data/Job-Result-cache/{filename}\n")
 
         except Exception as e:
             print(f"    [!] Error scraping category '{category}': {e}")
