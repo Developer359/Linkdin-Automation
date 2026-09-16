@@ -1,15 +1,9 @@
 # Ignore .env files
 .env
 
-
-# Ignore only the cache results inside Data
-Data/Job-Result-cache/AIEngineer.json
-Data/Job-Result-cache/Designer.json
-Data/Job-Result-cache/Fullstack.json
-Data/Job-Result-cache/MobileDeveloper.json
-Data/Job-Result-cache/SoftwareEngineer.json
-Data/Job_Rank.json
-Data/Job-info.json
+# Ignore all JSON cache files in Data directory
+Data/*.json
+Data/Job-Result-cache/*.json
 
 # Ignore python cache files globally
 __pycache__/
