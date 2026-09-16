@@ -1,0 +1,46 @@
+[
+    {
+        "category": "Fullstack",
+        "title": "Backend Engineer Node.js + AWS",
+        "company": "Deel",
+        "location": "Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4455897455",
+        "date_posted": "",
+        "source": "LinkedIn",
+        "evaluation_score": 9,
+        "reason": "Deel is a globally recognized HR tech unicorn, offering exceptional career prestige and stability. This Backend Engineer role, while not explicitly 'Fullstack', is a core component within a top-tier company, providing invaluable experience and a strong foundation in a leading firm."
+    },
+    {
+        "category": "AIEngineer",
+        "title": "AI Engineer",
+        "company": "Pixis",
+        "location": "Punjab, Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4466506797",
+        "date_posted": "",
+        "source": "LinkedIn",
+        "evaluation_score": 9,
+        "reason": "Pixis is a global AI company, making this an ideal fit for an 'AI Engineer' role. The company's direct focus on artificial intelligence ensures a relevant and impactful work environment. This opportunity combines the stability of a well-funded, growing tech firm with direct exposure to cutting-edge AI development."
+    },
+    {
+        "category": "MobileDeveloper",
+        "title": "Junior Flutter Developer",
+        "company": "Synwave Solutions",
+        "location": "Islamabad, Islāmābād, Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4465973559",
+        "date_posted": "",
+        "source": "LinkedIn",
+        "evaluation_score": 7,
+        "reason": "This job is the absolute best fit for the 'MobileDeveloper' category, offering a specific junior-level role in Flutter, a popular mobile framework. While Synwave Solutions is a regional company, it provides a clear and appropriate opportunity for aspiring mobile developers, outperforming other options in role clarity and category alignment."
+    },
+    {
+        "category": "Designer",
+        "title": "Product Designer",
+        "company": "Dubizzle Labs",
+        "location": "Lahore, Punjab, Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4447986075",
+        "date_posted": "",
+        "source": "LinkedIn",
+        "evaluation_score": 9,
+        "reason": "Dubizzle Labs, part of the major EMPG group, is a leading regional online classifieds platform, offering exceptional brand recognition and stability. A Product Designer role here provides high-impact experience within a well-established tech company, significantly boosting career prestige and growth potential."
+    }
+]
