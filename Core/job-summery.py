@@ -44,25 +44,6 @@ def extract_email_fallback(text: str) -> str:
     return emails[0] if emails else "Not specified"
 
 
-def deduplicate_jobs(job_list: list) -> list:
-    """Deduplicates jobs based on job_url or title+company combination."""
-    seen = set()
-    unique_jobs = []
-
-    for job in job_list:
-        url = job.get("job_url", "").strip()
-        title = job.get("title", "").strip().lower()
-        company = job.get("company", "").strip().lower()
-
-        identifier = url if url else f"{title}::{company}"
-
-        if identifier and identifier not in seen:
-            seen.add(identifier)
-            unique_jobs.append(job)
-
-    return unique_jobs
-
-
 def summarize_job_with_gemini(job_data: dict, max_retries: int = 3) -> dict:
     raw_desc = job_data.get("job_description", "")
     existing_email = job_data.get("company_email", "")
@@ -154,17 +135,14 @@ def run_job_summarizer():
         return
 
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
-        raw_job_list = json.load(f)
+        job_list = json.load(f)
 
-    if not raw_job_list:
+    if not job_list:
         print("No jobs found in Job-Info.json to process.")
         return
 
-    # Filter out duplicate jobs
-    job_list = deduplicate_jobs(raw_job_list)
-    
     print(f"--- Starting Sequential LinkedIn Job Summarizer | Model: {MODEL_NAME} ---")
-    print(f"Total unique jobs to process: {len(job_list)} (Filtered {len(raw_job_list) - len(job_list)} duplicates)\n")
+    print(f"Total jobs to process: {len(job_list)}\n")
 
     summarized_jobs = []
 
@@ -180,7 +158,7 @@ def run_job_summarizer():
         # Pacing request by 2s to minimize rate-limit triggers
         time.sleep(2)
 
-    print(f"\nDone! Successfully saved {len(summarized_jobs)} unique jobs to '{OUTPUT_FILE}'")
+    print(f"\nDone! Successfully saved {len(summarized_jobs)} jobs to '{OUTPUT_FILE}'")
 
 
 if __name__ == "__main__":
