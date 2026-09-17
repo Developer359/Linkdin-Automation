@@ -54,7 +54,7 @@ def fetch_job_details():
             "company_url": "",
             "company_logo": "",
             "company_email": "",
-            "pay_info": "Not specified"
+            "pay_info": ""
         }
 
         try:
