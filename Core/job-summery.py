@@ -155,7 +155,6 @@ def run_job_summarizer():
         save_progress_to_json(summarized_jobs)
         print(f"  ✓ Saved to 'Job-summery.json'")
         
-        # Pacing request by 2s to minimize rate-limit triggers
         time.sleep(2)
 
     print(f"\nDone! Successfully saved {len(summarized_jobs)} jobs to '{OUTPUT_FILE}'")
