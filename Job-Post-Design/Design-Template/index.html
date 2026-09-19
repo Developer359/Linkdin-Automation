@@ -33,7 +33,7 @@
     Every element is positioned using percentages and cqw container units so the design stays responsive.
   -->
   <main
-    class="relative w-[min(92vw,440px)] aspect-[367/520] overflow-hidden bg-gradient-to-br from-white via-[#f4f5fa] to-[#e9ebf3] shadow-2xl [container-type:inline-size]"
+    class="relative w-[min(92vw,440px)] aspect-[370/490] overflow-hidden bg-gradient-to-br from-white via-[#f4f5fa] to-[#e9ebf3] shadow-2xl [container-type:inline-size]"
   >
 
     <!-- ===== TOP DECOR: navy wave, stripes, photo ===== -->
@@ -134,35 +134,16 @@
       <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
     </div>
 
-    <!-- ===== MEGAPHONE + HAND (vector) ===== -->
-    <svg class="absolute left-[61%] top-[60%] w-[35.5%]" viewBox="0 0 134 158" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Megaphone">
-      <!-- sound lines -->
-      <g stroke="#15172e" stroke-width="1.6" stroke-linecap="round">
-        <line x1="30" y1="2" x2="41" y2="22" />
-        <line x1="8" y1="33" x2="30" y2="40" />
-        <line x1="2" y1="56" x2="26" y2="56" />
-      </g>
-
-      <!-- handle -->
-      <path d="M84 84 L98 90 L92 118 L78 112 Z" fill="#5a6388" />
-
-      <!-- horn body -->
-      <path d="M52 16 C82 26 108 46 124 66 L108 100 C86 92 62 80 40 68 Z" fill="#6b7499" />
-      <!-- back cap -->
-      <ellipse cx="116" cy="83" rx="9" ry="19" transform="rotate(-28 116 83)" fill="#d7dbe9" />
-      <ellipse cx="116" cy="83" rx="9" ry="19" transform="rotate(-28 116 83)" stroke="#5a6388" stroke-width="1.5" />
-      <!-- horn opening -->
-      <ellipse cx="46" cy="42" rx="12" ry="27" transform="rotate(-24 46 42)" fill="#9aa2c3" />
-      <ellipse cx="46" cy="42" rx="8.5" ry="22" transform="rotate(-24 46 42)" fill="#eceef6" />
-
-      <!-- hand -->
-      <path d="M62 112 C70 100 92 100 104 108 C112 114 112 124 104 128 L82 140 C70 144 58 138 56 128 C55 122 58 116 62 112 Z" fill="#dccfae" />
-      <path d="M88 108 C94 106 100 108 102 112" stroke="#b9aa84" stroke-width="1.3" stroke-linecap="round" />
-      <!-- white cuff -->
-      <path d="M78 134 L98 122 L108 138 L88 150 Z" fill="#f4f5fa" />
-      <!-- suit sleeve -->
-      <path d="M88 150 L108 138 L134 118 L134 158 L96 158 Z" fill="#15172e" />
-    </svg>
+    <!-- ===== LUCIDE / HEROICONS REACT ILLUSTRATION CARD ===== -->
+    <div class="absolute left-[61%] top-[58%] w-[28%] aspect-square rounded-2xl bg-gradient-to-tr from-[#15172e] to-[#2e355c] p-[3cqw] shadow-xl flex items-center justify-center -rotate-6 border border-white/20">
+      <div class="w-full h-full rounded-xl bg-[#6b7499]/20 flex items-center justify-center backdrop-blur-sm">
+        <!-- Lucide Megaphone Vector -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-[65%] h-[65%] text-white drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 11 18-5v12L3 13v-2z"/>
+          <path d="M11.6 16.8 a 3 3 0 1 1 -5.8-1.6"/>
+        </svg>
+      </div>
+    </div>
 
     <!-- ===== PILL: APPLY NOW ===== -->
     <div class="absolute left-0 top-[77.5%] w-[52%] h-[5.8%] rounded-r-full bg-navy p-[2px]">
