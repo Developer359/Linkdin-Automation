@@ -1,120 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>We Are Hiring — DigiXValley</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>We're Hiring</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: {
-          sans: ['Poppins', 'sans-serif'],
-          script: ['Dancing Script', 'cursive'],
-        },
-        colors: {
-          teal: { DEFAULT: '#1FA9C9', dark: '#0F94B4', deep: '#0A6981' },
-          navy: { DEFAULT: '#122C3A', soft: '#1B3B4B' },
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: {
+            navy: '#15172e',
+            slate2: '#6b7499',
+            ink: '#111218',
+          },
         },
       },
-    },
-  };
-</script>
-
-<style>
-  /* Tailwind's arbitrary-value utilities cover layout; this only holds
-     the couple of things utility classes can't express (gradients/clip-path defs, text stroke). */
-  .bg-teal-panel{
-    background: linear-gradient(160deg,#2BB6D6 0%, #1FA9C9 45%, #1596B6 100%);
-    clip-path: polygon(0 0, 100% 0, 38% 100%, 0% 100%);
-  }
-  .text-stroke{ -webkit-text-stroke: 1px rgba(15,60,75,0.15); }
-</style>
+    };
+  </script>
 </head>
 
-<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#dfe3e5] via-[#f2f3f4] to-[#e3e6e8] p-6 font-sans">
+<body class="min-h-screen bg-neutral-200 flex items-center justify-center p-4 font-sans">
 
-  <div class="relative w-[483px] max-w-full aspect-[483/506] bg-gradient-to-br from-[#E9E9E9] via-[#F4F4F4] to-[#eceded] rounded-[26px] overflow-hidden shadow-[0_30px_60px_-20px_rgba(10,30,40,0.35),0_4px_18px_rgba(10,30,40,0.12)]">
+  <!--
+    Poster = 367 x 520 design grid.
+    Every element is positioned in % of that grid and every font size uses cqw,
+    so the whole poster scales perfectly at any width while staying identical.
+  -->
+  <main
+    class="relative w-[min(92vw,480px)] aspect-[367/520] overflow-hidden bg-gradient-to-br from-white via-[#f4f5fa] to-[#e9ebf3] shadow-2xl [container-type:inline-size]"
+  >
 
-    <!-- diagonal teal panel -->
-    <div class="absolute inset-0 w-[66%] h-full bg-teal-panel"></div>
+    <!-- ===== TOP DECOR: navy wave, stripes, photo ===== -->
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 367 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <clipPath id="photoClip">
+          <path d="M162,0 H367 V206 C310,212 250,196 214,146 C186,108 166,62 162,0 Z" />
+        </clipPath>
+      </defs>
 
-    <!-- logo -->
-    <div class="absolute top-5 left-[22px] z-10 font-extrabold text-[15px] text-navy">
-      ApexTech Career
-    </div>
+      <!-- navy wave (top-left) -->
+      <path d="M0,0 H205 V42 C165,42 132,70 100,90 C65,110 25,118 0,152 Z" fill="#15172e" />
+      <!-- diagonal light stripes -->
+      <polygon points="8,0 22,0 0,46 0,28" fill="#8c94b6" />
+      <polygon points="30,0 36,0 0,74 0,62" fill="#8c94b6" opacity=".85" />
 
-    <!-- follow us -->
-    <div class="absolute top-4 right-5 z-10 text-right">
-      <div class="text-[9.5px] font-bold text-navy tracking-wide mb-1.5">Follow Us Now</div>
-      <div class="flex gap-[7px] justify-end">
-        <span class="w-[17px] h-[17px] rounded-full bg-navy flex items-center justify-center">
-          <svg viewBox="0 0 24 24" class="w-[9px] h-[9px] fill-white"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98A8.521 8.521 0 0 1 2 18.65c-.6 0-1.19-.04-1.77-.11A12.05 12.05 0 0 0 6.29 20.5c7.55 0 11.68-6.26 11.68-11.68 0-.18 0-.36-.01-.53.8-.58 1.5-1.3 2.5-2.29z"/></svg>
-        </span>
-        <span class="w-[17px] h-[17px] rounded-full bg-navy flex items-center justify-center">
-          <svg viewBox="0 0 24 24" class="w-[9px] h-[9px] fill-white"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.64.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.64-.07-4.85s.02-3.58.07-4.85c.15-3.23 1.66-4.77 4.92-4.92 1.27-.06 1.65-.07 4.85-.07zM12 0C8.74 0 8.33.01 7.05.07c-4.35.2-6.78 2.62-6.98 6.98C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.41-10.85a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z"/></svg>
-        </span>
-        <span class="w-[17px] h-[17px] rounded-full bg-navy flex items-center justify-center">
-          <svg viewBox="0 0 24 24" class="w-[9px] h-[9px] fill-white"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>
-        </span>
+      <!-- soft outer swoosh line around the photo -->
+      <path d="M150,0 C154,66 184,124 226,158 C270,204 330,214 367,204" fill="none" stroke="#c3c8dc" stroke-width="1.2" />
+
+      <!-- dummy photo (replace href with your own image) -->
+      <rect x="162" y="0" width="205" height="210" fill="#b8bfd6" clip-path="url(#photoClip)" />
+      <image
+        href="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=80"
+        x="150" y="-10" width="240" height="235"
+        preserveAspectRatio="xMidYMid slice"
+        clip-path="url(#photoClip)"
+      />
+      <!-- navy border on the curved photo edge -->
+      <path d="M162,0 C166,62 186,108 214,146 C250,196 310,212 367,206" fill="none" stroke="#15172e" stroke-width="6" stroke-linecap="round" />
+    </svg>
+
+    <!-- ===== HEADING ===== -->
+    <h1 class="absolute left-[10.9%] top-[24.6%] text-[9.6cqw] leading-none font-extrabold text-ink tracking-tight">
+      We’re
+    </h1>
+    <h2 class="absolute left-[10.7%] top-[29.4%] text-[15.6cqw] leading-none font-bold text-slate2 tracking-[0.01em]">
+      Hiring
+    </h2>
+
+    <!-- ===== PARAGRAPH ===== -->
+    <p class="absolute left-[10.9%] top-[44.4%] text-[3.7cqw] leading-[1.42] font-medium text-[#2b2d3a] whitespace-nowrap">
+      Build your future with us and take part<br />
+      in meaningful projects that drive success.
+    </p>
+
+    <!-- ===== PILL: AVAILABLE POSITION ===== -->
+    <div class="absolute left-0 top-[55.4%] w-[49%] h-[5.9%] rounded-r-full bg-navy py-[0.5cqw] pr-[0.5cqw]">
+      <div class="h-full w-full rounded-r-full bg-slate2 flex items-center justify-center">
+        <span class="text-[3.7cqw] font-bold text-white">Available Position</span>
       </div>
     </div>
 
-    <!-- megaphone illustration -->
-    <div class="absolute -left-[12px] top-[110px] w-[278px] z-[6] drop-shadow-[0_18px_22px_rgba(10,30,40,0.35)]">
-      <img src="Speeker.png" alt="Speaker" class="w-full h-auto object-contain rotate-[-10deg]"/>
+    <!-- ===== CHEVRONS ===== -->
+    <svg class="absolute left-[55.6%] top-[56.3%] w-[25%]" viewBox="0 0 92 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g stroke="#7b84a8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2 L4 9 L12 16" opacity="1" />
+        <path d="M26 2 L18 9 L26 16" opacity=".9" />
+        <path d="M40 2 L32 9 L40 16" opacity=".75" />
+        <path d="M54 2 L46 9 L54 16" opacity=".55" />
+        <path d="M68 2 L60 9 L68 16" opacity=".35" />
+        <path d="M82 2 L74 9 L82 16" opacity=".18" />
+      </g>
+    </svg>
+
+    <!-- ===== CHECKLIST ===== -->
+    <ul class="absolute left-[10.9%] top-[63.85%] flex flex-col gap-[2.1cqw]">
+      <li class="flex items-center gap-[1.4cqw]">
+        <svg class="w-[4.9cqw] h-[4.9cqw] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="#15172e" stroke-width="1.6" />
+          <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="#15172e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="text-[3.7cqw] font-medium text-[#1f2130] leading-none">Frontend Developer</span>
+      </li>
+      <li class="flex items-center gap-[1.4cqw]">
+        <svg class="w-[4.9cqw] h-[4.9cqw] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="#15172e" stroke-width="1.6" />
+          <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="#15172e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="text-[3.7cqw] font-medium text-[#1f2130] leading-none">Backend Developer</span>
+      </li>
+      <li class="flex items-center gap-[1.4cqw]">
+        <svg class="w-[4.9cqw] h-[4.9cqw] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="#15172e" stroke-width="1.6" />
+          <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="#15172e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="text-[3.7cqw] font-medium text-[#1f2130] leading-none">Full Stack Developer</span>
+      </li>
+    </ul>
+
+    <!-- ===== RIGHT EDGE BAR + DOTS ===== -->
+    <div class="absolute right-0 top-[44.6%] h-[33.8%] w-[2.7%] bg-slate2"></div>
+    <div class="absolute left-[93.4%] top-[53.1%] flex flex-col gap-[2.9cqw]">
+      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
+      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
+      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
+      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
+      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
+      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
     </div>
 
-    <!-- headline -->
-    <div class="absolute top-14 right-6 z-10 text-right w-[260px]">
-      <p class="font-script font-bold text-[34px] leading-none text-navy -rotate-3 origin-right">We Are</p>
-      <p class="font-sans font-black text-[58px] leading-[0.92] text-teal my-0.5 tracking-tighter text-stroke">Hiring</p>
-      <p class="font-sans font-extrabold text-[21px] text-navy">Join Our Team</p>
-    </div>
+    <!-- ===== MEGAPHONE + HAND (vector) ===== -->
+    <svg class="absolute left-[63.5%] top-[65.5%] w-[36.5%]" viewBox="0 0 134 158" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Megaphone">
+      <!-- sound lines -->
+      <g stroke="#15172e" stroke-width="1.6" stroke-linecap="round">
+        <line x1="30" y1="2" x2="41" y2="22" />
+        <line x1="8" y1="33" x2="30" y2="40" />
+        <line x1="2" y1="56" x2="26" y2="56" />
+      </g>
 
-    <!-- open positions pill -->
-    <div class="absolute top-[236px] right-6 z-[6] bg-teal text-white font-bold text-[15px] px-[22px] py-2 rounded-full shadow-[0_8px_16px_-6px_rgba(31,169,201,0.55)]">
-      Open Positions
-    </div>
+      <!-- handle -->
+      <path d="M84 84 L98 90 L92 118 L78 112 Z" fill="#5a6388" />
 
-    <!-- positions list -->
-    <div class="absolute top-[272px] right-6 z-[6] w-[225px]">
-      <div class="flex items-baseline gap-2 justify-end mb-[9px] text-[13.5px] text-navy-soft">
-        <span class="font-extrabold text-navy text-[13.5px]">1</span>
-        <span class="font-semibold">UI/UX Designer</span>
-        <span class="font-normal text-[#3E525B]">(2 Positions)</span>
+      <!-- horn body -->
+      <path d="M52 16 C82 26 108 46 124 66 L108 100 C86 92 62 80 40 68 Z" fill="#6b7499" />
+      <!-- back cap -->
+      <ellipse cx="116" cy="83" rx="9" ry="19" transform="rotate(-28 116 83)" fill="#d7dbe9" />
+      <ellipse cx="116" cy="83" rx="9" ry="19" transform="rotate(-28 116 83)" stroke="#5a6388" stroke-width="1.5" />
+      <!-- horn opening -->
+      <ellipse cx="46" cy="42" rx="12" ry="27" transform="rotate(-24 46 42)" fill="#9aa2c3" />
+      <ellipse cx="46" cy="42" rx="8.5" ry="22" transform="rotate(-24 46 42)" fill="#eceef6" />
+
+      <!-- hand -->
+      <path d="M62 112 C70 100 92 100 104 108 C112 114 112 124 104 128 L82 140 C70 144 58 138 56 128 C55 122 58 116 62 112 Z" fill="#dccfae" />
+      <path d="M88 108 C94 106 100 108 102 112" stroke="#b9aa84" stroke-width="1.3" stroke-linecap="round" />
+      <!-- white cuff -->
+      <path d="M78 134 L98 122 L108 138 L88 150 Z" fill="#f4f5fa" />
+      <!-- suit sleeve -->
+      <path d="M88 150 L108 138 L134 118 L134 158 L96 158 Z" fill="#15172e" />
+    </svg>
+
+    <!-- ===== PILL: APPLY NOW ===== -->
+    <div class="absolute left-0 top-[86%] w-[49%] h-[5.9%] rounded-r-full bg-navy py-[0.5cqw] pr-[0.5cqw]">
+      <div class="h-full w-full rounded-r-full bg-slate2 flex items-center justify-center">
+        <span class="text-[3.7cqw] font-bold text-white">Apply Now</span>
       </div>
-      <div class="flex items-baseline gap-2 justify-end mb-[9px] text-[13.5px] text-navy-soft">
-        <span class="font-extrabold text-navy text-[13.5px]">2</span>
-        <span class="font-semibold">React JS</span>
-        <span class="font-normal text-[#3E525B]">(4 Positions)</span>
-      </div>
-      <div class="flex items-baseline gap-2 justify-end mb-[9px] text-[13.5px] text-navy-soft">
-        <span class="font-extrabold text-navy text-[13.5px]">3</span>
-        <span class="font-semibold">Node JS</span>
-        <span class="font-normal text-[#3E525B]">(4 Positions)</span>
-      </div>
     </div>
 
-    <!-- apply now button -->
-    <div class="absolute top-[392px] right-6 z-[6] bg-navy text-white font-bold text-[12.5px] px-[18px] py-[9px] rounded-full flex items-center gap-1.5 shadow-[0_10px_18px_-8px_rgba(18,44,58,0.5)]">
-      <svg viewBox="0 0 24 24" class="w-[11px] h-[11px] fill-none stroke-white stroke-2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-      APPLY NOW
-    </div>
-
-    <!-- contact -->
-    <div class="absolute bottom-[34px] right-6 z-[6] text-right">
-      <p class="font-bold text-[14.5px] text-teal-dark m-0 mb-1">Mehroz@digixvalley.com</p>
-      <p class="font-medium text-[11.5px] text-[#8b9aa1] m-0">0333-6362519</p>
-    </div>
-
-  </div>
-
+    <!-- ===== FOOTER ===== -->
+    <p class="absolute left-0 right-0 top-[93.4%] text-center text-[3.1cqw] font-medium text-[#3d3f4d] leading-none">
+      Work Mode: Fully Remote
+    </p>
+  </main>
 </body>
 </html>
