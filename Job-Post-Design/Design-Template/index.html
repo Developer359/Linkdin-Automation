@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>We Are Hiring — DigiXValley</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Poppins', 'sans-serif'],
+          script: ['Dancing Script', 'cursive'],
+        },
+        colors: {
+          teal: { DEFAULT: '#1FA9C9', dark: '#0F94B4', deep: '#0A6981' },
+          navy: { DEFAULT: '#122C3A', soft: '#1B3B4B' },
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  /* Tailwind's arbitrary-value utilities cover layout; this only holds
+     the couple of things utility classes can't express (gradients/clip-path defs, text stroke). */
+  .bg-teal-panel{
+    background: linear-gradient(160deg,#2BB6D6 0%, #1FA9C9 45%, #1596B6 100%);
+    clip-path: polygon(0 0, 100% 0, 34% 100%, 0% 100%);
+  }
+  .text-stroke{ -webkit-text-stroke: 1px rgba(15,60,75,0.15); }
+</style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#dfe3e5] via-[#f2f3f4] to-[#e3e6e8] p-6 font-sans">
+
+  <div class="relative w-[483px] max-w-full aspect-[483/506] bg-gradient-to-br from-[#E9E9E9] via-[#F4F4F4] to-[#eceded] rounded-[26px] overflow-hidden shadow-[0_30px_60px_-20px_rgba(10,30,40,0.35),0_4px_18px_rgba(10,30,40,0.12)]">
+
+    <!-- diagonal teal panel -->
+    <div class="absolute inset-0 w-[66%] h-full bg-teal-panel"></div>
+
+    <!-- logo -->
+    <div class="absolute top-5 left-[22px] z-10 font-extrabold text-[15px] text-navy">
+      digi<span class="text-teal-dark">[x]</span>valley
+    </div>
+
+    <!-- follow us -->
+    <div class="absolute top-4 right-5 z-10 text-right">
+      <div class="text-[9.5px] font-bold text-navy tracking-wide mb-1.5">Follow Us Now</div>
+      <div class="flex gap-[7px] justify-end">
+        <span class="w-[17px] h-[17px] rounded-full bg-navy flex items-center justify-center">
+          <svg viewBox="0 0 24 24" class="w-[9px] h-[9px] fill-white"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98A8.521 8.521 0 0 1 2 18.65c-.6 0-1.19-.04-1.77-.11A12.05 12.05 0 0 0 6.29 20.5c7.55 0 11.68-6.26 11.68-11.68 0-.18 0-.36-.01-.53.8-.58 1.5-1.3 2.5-2.29z"/></svg>
+        </span>
+        <span class="w-[17px] h-[17px] rounded-full bg-navy flex items-center justify-center">
+          <svg viewBox="0 0 24 24" class="w-[9px] h-[9px] fill-white"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.64.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.64-.07-4.85s.02-3.58.07-4.85c.15-3.23 1.66-4.77 4.92-4.92 1.27-.06 1.65-.07 4.85-.07zM12 0C8.74 0 8.33.01 7.05.07c-4.35.2-6.78 2.62-6.98 6.98C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.41-10.85a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z"/></svg>
+        </span>
+        <span class="w-[17px] h-[17px] rounded-full bg-navy flex items-center justify-center">
+          <svg viewBox="0 0 24 24" class="w-[9px] h-[9px] fill-white"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- decorative triangles -->
+    <div class="absolute top-[82px] left-[58px] w-10 z-[4]">
+      <svg viewBox="0 0 60 60" class="drop-shadow-[0_6px_10px_rgba(0,0,0,0.18)]">
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1FA9C9"/><stop offset="1" stop-color="#0F7C97"/></linearGradient></defs>
+        <polygon points="30,4 56,50 4,50" fill="url(#g1)"/>
+        <polygon points="30,4 56,50 30,50" fill="#0d6c85" opacity="0.55"/>
+      </svg>
+    </div>
+    <div class="absolute bottom-24 left-[76px] w-[26px] z-[4] rotate-[18deg]">
+      <svg viewBox="0 0 60 60" class="drop-shadow-[0_6px_10px_rgba(0,0,0,0.18)]">
+        <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1FA9C9"/><stop offset="1" stop-color="#0F7C97"/></linearGradient></defs>
+        <polygon points="30,4 56,50 4,50" fill="url(#g2)"/>
+        <polygon points="30,4 56,50 30,50" fill="#0d6c85" opacity="0.55"/>
+      </svg>
+    </div>
+    <div class="absolute bottom-[118px] right-[150px] w-[26px] z-[3] opacity-85 -rotate-[8deg]">
+      <svg viewBox="0 0 60 60" class="drop-shadow-[0_6px_10px_rgba(0,0,0,0.18)]">
+        <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1FA9C9"/><stop offset="1" stop-color="#0F7C97"/></linearGradient></defs>
+        <polygon points="30,4 56,50 4,50" fill="url(#g3)"/>
+        <polygon points="30,4 56,50 30,50" fill="#0d6c85" opacity="0.55"/>
+      </svg>
+    </div>
+
+    <!-- megaphone illustration -->
+    <div class="absolute -left-[10px] top-[124px] w-[258px] z-[6] drop-shadow-[0_18px_22px_rgba(10,30,40,0.35)]">
+      <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="0.3">
+            <stop offset="0" stop-color="#f5f7f8"/>
+            <stop offset="0.55" stop-color="#e2e8ea"/>
+            <stop offset="1" stop-color="#b9c7cb"/>
+          </linearGradient>
+          <linearGradient id="innerGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#cfd8db"/>
+            <stop offset="1" stop-color="#eef2f3"/>
+          </linearGradient>
+          <radialGradient id="tealGrad" cx="0.35" cy="0.4" r="0.75">
+            <stop offset="0" stop-color="#3FC2DE"/>
+            <stop offset="0.6" stop-color="#1CA0BE"/>
+            <stop offset="1" stop-color="#0B6E86"/>
+          </radialGradient>
+          <linearGradient id="handleGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1c4152"/>
+            <stop offset="1" stop-color="#0a212b"/>
+          </linearGradient>
+        </defs>
+
+        <!-- small rear megaphone -->
+        <g transform="translate(2,26) rotate(-10)">
+          <path d="M6 66 C6 58 12 52 20 50 L58 34 C64 32 68 36 68 42 L68 92 C68 98 64 102 58 100 L20 84 C12 82 6 76 6 66 Z"
+                fill="url(#bodyGrad)" stroke="#12303d" stroke-width="4" stroke-linejoin="round"/>
+          <ellipse cx="63" cy="67" rx="10" ry="30" fill="url(#tealGrad)" stroke="#12303d" stroke-width="3.5"/>
+          <rect x="-6" y="58" width="18" height="16" rx="4" transform="rotate(-14 3 66)" fill="url(#handleGrad)" stroke="#12303d" stroke-width="3"/>
+        </g>
+
+        <!-- main large megaphone body (cone) -->
+        <g transform="translate(46,4) rotate(-4)">
+          <path d="M40 118
+                   C40 104 50 92 64 86
+                   L210 30
+                   C232 22 252 40 252 66
+                   L252 186
+                   C252 212 232 230 210 222
+                   L64 166
+                   C50 160 40 148 40 134 Z"
+                fill="url(#bodyGrad)" stroke="#12303d" stroke-width="6" stroke-linejoin="round"/>
+          <path d="M66 100 C58 104 52 112 52 122
+                   L52 130 C52 140 58 148 66 152
+                   L205 200 C218 205 230 195 230 180
+                   L230 72 C230 57 218 47 205 52 Z"
+                fill="url(#innerGrad)" opacity="0.9"/>
+          <ellipse cx="234" cy="126" rx="34" ry="98" fill="url(#tealGrad)" stroke="#12303d" stroke-width="5"/>
+          <ellipse cx="244" cy="126" rx="19" ry="66" fill="#0a6981"/>
+          <path d="M30 108 L44 100 L44 152 L30 144 Z" fill="url(#handleGrad)" stroke="#0a212b" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M22 140 C10 156 8 186 24 206 C34 218 52 220 62 208 L70 194 L38 158 Z"
+                fill="url(#handleGrad)" stroke="#0a212b" stroke-width="4" stroke-linejoin="round"/>
+          <rect x="14" y="118" width="16" height="20" rx="4" fill="url(#tealGrad)" stroke="#0a212b" stroke-width="3"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- headline -->
+    <div class="absolute top-14 right-6 z-10 text-right w-[260px]">
+      <p class="font-script font-bold text-[34px] leading-none text-navy -rotate-3 origin-right">We Are</p>
+      <p class="font-sans font-black text-[58px] leading-[0.92] text-teal my-0.5 tracking-tighter text-stroke">Hiring</p>
+      <p class="font-sans font-extrabold text-[21px] text-navy">Join Our Team</p>
+    </div>
+
+    <!-- open positions pill -->
+    <div class="absolute top-[236px] right-6 z-[6] bg-teal text-white font-bold text-[15px] px-[22px] py-2 rounded-full shadow-[0_8px_16px_-6px_rgba(31,169,201,0.55)]">
+      Open Positions
+    </div>
+
+    <!-- positions list -->
+    <div class="absolute top-[272px] right-6 z-[6] w-[225px]">
+      <div class="flex items-baseline gap-2 justify-end mb-[9px] text-[13.5px] text-navy-soft">
+        <span class="font-extrabold text-navy text-[13.5px]">1</span>
+        <span class="font-semibold">UI/UX Designer</span>
+        <span class="font-normal text-[#3E525B]">(2 Positions)</span>
+      </div>
+      <div class="flex items-baseline gap-2 justify-end mb-[9px] text-[13.5px] text-navy-soft">
+        <span class="font-extrabold text-navy text-[13.5px]">2</span>
+        <span class="font-semibold">React JS</span>
+        <span class="font-normal text-[#3E525B]">(4 Positions)</span>
+      </div>
+      <div class="flex items-baseline gap-2 justify-end mb-[9px] text-[13.5px] text-navy-soft">
+        <span class="font-extrabold text-navy text-[13.5px]">3</span>
+        <span class="font-semibold">Node JS</span>
+        <span class="font-normal text-[#3E525B]">(4 Positions)</span>
+      </div>
+    </div>
+
+    <!-- arrow -->
+    <div class="absolute top-[352px] right-[70px] w-[52px] z-[6]">
+      <svg viewBox="0 0 60 60" fill="none">
+        <path d="M8 6 C6 26 18 44 40 48" stroke="#173544" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M30 45 L40 48 L38 38" stroke="#173544" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+
+    <!-- apply now button -->
+    <div class="absolute top-[392px] right-6 z-[6] bg-navy text-white font-bold text-[12.5px] px-[18px] py-[9px] rounded-full flex items-center gap-1.5 shadow-[0_10px_18px_-8px_rgba(18,44,58,0.5)]">
+      <svg viewBox="0 0 24 24" class="w-[11px] h-[11px] fill-none stroke-white stroke-2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      APPLY NOW
+    </div>
+
+    <!-- contact -->
+    <div class="absolute bottom-[34px] right-6 z-[6] text-right">
+      <p class="font-bold text-[14.5px] text-teal-dark m-0 mb-1">Mehroz@digixvalley.com</p>
+      <p class="font-medium text-[11.5px] text-[#8b9aa1] m-0">0333-6362519</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
