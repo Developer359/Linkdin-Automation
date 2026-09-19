@@ -32,7 +32,7 @@
      the couple of things utility classes can't express (gradients/clip-path defs, text stroke). */
   .bg-teal-panel{
     background: linear-gradient(160deg,#2BB6D6 0%, #1FA9C9 45%, #1596B6 100%);
-    clip-path: polygon(0 0, 100% 0, 34% 100%, 0% 100%);
+    clip-path: polygon(0 0, 100% 0, 38% 100%, 0% 100%);
   }
   .text-stroke{ -webkit-text-stroke: 1px rgba(15,60,75,0.15); }
 </style>
@@ -47,7 +47,7 @@
 
     <!-- logo -->
     <div class="absolute top-5 left-[22px] z-10 font-extrabold text-[15px] text-navy">
-      digi<span class="text-teal-dark">[x]</span>valley
+      ApexTech Career
     </div>
 
     <!-- follow us -->
@@ -66,85 +66,9 @@
       </div>
     </div>
 
-    <!-- decorative triangles -->
-    <div class="absolute top-[82px] left-[58px] w-10 z-[4]">
-      <svg viewBox="0 0 60 60" class="drop-shadow-[0_6px_10px_rgba(0,0,0,0.18)]">
-        <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1FA9C9"/><stop offset="1" stop-color="#0F7C97"/></linearGradient></defs>
-        <polygon points="30,4 56,50 4,50" fill="url(#g1)"/>
-        <polygon points="30,4 56,50 30,50" fill="#0d6c85" opacity="0.55"/>
-      </svg>
-    </div>
-    <div class="absolute bottom-24 left-[76px] w-[26px] z-[4] rotate-[18deg]">
-      <svg viewBox="0 0 60 60" class="drop-shadow-[0_6px_10px_rgba(0,0,0,0.18)]">
-        <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1FA9C9"/><stop offset="1" stop-color="#0F7C97"/></linearGradient></defs>
-        <polygon points="30,4 56,50 4,50" fill="url(#g2)"/>
-        <polygon points="30,4 56,50 30,50" fill="#0d6c85" opacity="0.55"/>
-      </svg>
-    </div>
-    <div class="absolute bottom-[118px] right-[150px] w-[26px] z-[3] opacity-85 -rotate-[8deg]">
-      <svg viewBox="0 0 60 60" class="drop-shadow-[0_6px_10px_rgba(0,0,0,0.18)]">
-        <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1FA9C9"/><stop offset="1" stop-color="#0F7C97"/></linearGradient></defs>
-        <polygon points="30,4 56,50 4,50" fill="url(#g3)"/>
-        <polygon points="30,4 56,50 30,50" fill="#0d6c85" opacity="0.55"/>
-      </svg>
-    </div>
-
     <!-- megaphone illustration -->
-    <div class="absolute -left-[10px] top-[124px] w-[258px] z-[6] drop-shadow-[0_18px_22px_rgba(10,30,40,0.35)]">
-      <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="0.3">
-            <stop offset="0" stop-color="#f5f7f8"/>
-            <stop offset="0.55" stop-color="#e2e8ea"/>
-            <stop offset="1" stop-color="#b9c7cb"/>
-          </linearGradient>
-          <linearGradient id="innerGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#cfd8db"/>
-            <stop offset="1" stop-color="#eef2f3"/>
-          </linearGradient>
-          <radialGradient id="tealGrad" cx="0.35" cy="0.4" r="0.75">
-            <stop offset="0" stop-color="#3FC2DE"/>
-            <stop offset="0.6" stop-color="#1CA0BE"/>
-            <stop offset="1" stop-color="#0B6E86"/>
-          </radialGradient>
-          <linearGradient id="handleGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#1c4152"/>
-            <stop offset="1" stop-color="#0a212b"/>
-          </linearGradient>
-        </defs>
-
-        <!-- small rear megaphone -->
-        <g transform="translate(2,26) rotate(-10)">
-          <path d="M6 66 C6 58 12 52 20 50 L58 34 C64 32 68 36 68 42 L68 92 C68 98 64 102 58 100 L20 84 C12 82 6 76 6 66 Z"
-                fill="url(#bodyGrad)" stroke="#12303d" stroke-width="4" stroke-linejoin="round"/>
-          <ellipse cx="63" cy="67" rx="10" ry="30" fill="url(#tealGrad)" stroke="#12303d" stroke-width="3.5"/>
-          <rect x="-6" y="58" width="18" height="16" rx="4" transform="rotate(-14 3 66)" fill="url(#handleGrad)" stroke="#12303d" stroke-width="3"/>
-        </g>
-
-        <!-- main large megaphone body (cone) -->
-        <g transform="translate(46,4) rotate(-4)">
-          <path d="M40 118
-                   C40 104 50 92 64 86
-                   L210 30
-                   C232 22 252 40 252 66
-                   L252 186
-                   C252 212 232 230 210 222
-                   L64 166
-                   C50 160 40 148 40 134 Z"
-                fill="url(#bodyGrad)" stroke="#12303d" stroke-width="6" stroke-linejoin="round"/>
-          <path d="M66 100 C58 104 52 112 52 122
-                   L52 130 C52 140 58 148 66 152
-                   L205 200 C218 205 230 195 230 180
-                   L230 72 C230 57 218 47 205 52 Z"
-                fill="url(#innerGrad)" opacity="0.9"/>
-          <ellipse cx="234" cy="126" rx="34" ry="98" fill="url(#tealGrad)" stroke="#12303d" stroke-width="5"/>
-          <ellipse cx="244" cy="126" rx="19" ry="66" fill="#0a6981"/>
-          <path d="M30 108 L44 100 L44 152 L30 144 Z" fill="url(#handleGrad)" stroke="#0a212b" stroke-width="4" stroke-linejoin="round"/>
-          <path d="M22 140 C10 156 8 186 24 206 C34 218 52 220 62 208 L70 194 L38 158 Z"
-                fill="url(#handleGrad)" stroke="#0a212b" stroke-width="4" stroke-linejoin="round"/>
-          <rect x="14" y="118" width="16" height="20" rx="4" fill="url(#tealGrad)" stroke="#0a212b" stroke-width="3"/>
-        </g>
-      </svg>
+    <div class="absolute -left-[12px] top-[110px] w-[278px] z-[6] drop-shadow-[0_18px_22px_rgba(10,30,40,0.35)]">
+      <img src="Speeker.png" alt="Speaker" class="w-full h-auto object-contain rotate-[-10deg]"/>
     </div>
 
     <!-- headline -->
@@ -176,14 +100,6 @@
         <span class="font-semibold">Node JS</span>
         <span class="font-normal text-[#3E525B]">(4 Positions)</span>
       </div>
-    </div>
-
-    <!-- arrow -->
-    <div class="absolute top-[352px] right-[70px] w-[52px] z-[6]">
-      <svg viewBox="0 0 60 60" fill="none">
-        <path d="M8 6 C6 26 18 44 40 48" stroke="#173544" stroke-width="3.5" stroke-linecap="round"/>
-        <path d="M30 45 L40 48 L38 38" stroke="#173544" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      </svg>
     </div>
 
     <!-- apply now button -->
