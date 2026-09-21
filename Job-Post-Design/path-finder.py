@@ -1,21 +1,24 @@
-import os
+from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
-    # Use your machine's already installed Google Chrome (no download required!)
+    # 1. Launch your local system Chrome (bypasses browser download blocks)
     browser = p.chromium.launch(channel="chrome", headless=True)
     page = browser.new_page()
 
-    # Load local HTML file from your exact directory
-    file_path = os.path.abspath("D:/Linkdin-Automation/Job-Post-Design/Design-Template/index.html")
-    page.goto(f"file:///{file_path}", wait_until="domcontentloaded")
+    # 2. Set viewport size wide and tall enough for the canvas
+    page.set_viewport_size({"width": 1280, "height": 1000})
 
-    # Target the middle card container
-    # (Update this selector with the exact class name of your card container from index.html)
-    middle_card = page.locator(".bg-gradient-to-tr")
+    # 3. Securely format the local Windows file path into a file:// URI
+    html_path = Path("D:/Linkdin-Automation/Job-Post-Design/Design-Template/index.html").resolve()
+    page.goto(html_path.as_uri(), wait_until="domcontentloaded")
 
-    # Capture screenshot of just that element
-    middle_card.screenshot(path="middle-card.png")
+    # 4. Target the main card container by its ID
+    job_card = page.locator("#job-post-card")
+    job_card.wait_for(state="visible", timeout=15000)
+
+    # 5. Capture a clean, precise screenshot of the entire job post card
+    job_card.screenshot(path="full-job-post.png")
 
     browser.close()
-    print("Middle card captured successfully using local Chrome!")
+    print("Full job post card captured successfully as 'full-job-post.png'!")
