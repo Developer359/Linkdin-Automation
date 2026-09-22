@@ -28,10 +28,7 @@
 
 <body class="min-h-screen bg-neutral-200 flex items-center justify-center p-4 font-sans">
 
-  <!--
-    Poster = 367 x 520 design grid.
-    Every element is positioned using percentages and cqw container units so the design stays responsive.
-  -->
+  <!-- ===== JOB POST CARD CONTAINER (Targeted for dynamic color_code injection) ===== -->
   <main
     id="job-post-card"
     class="relative w-[min(92vw,440px)] aspect-[370/490] overflow-hidden bg-gradient-to-br from-white via-[#f4f5fa] to-[#e9ebf3] shadow-2xl [container-type:inline-size]"
@@ -66,7 +63,7 @@
       <path d="M162,0 C166,62 186,108 214,146 C250,196 310,212 367,206" fill="none" stroke="#15172e" stroke-width="6" stroke-linecap="round" />
     </svg>
 
-    <!-- ===== HEADING ===== -->
+    <!-- ===== HEADING (Static Branding) ===== -->
     <h1 class="absolute left-[9.5%] top-[26%] text-[9cqw] leading-none font-extrabold text-ink tracking-tight">
       We’re
     </h1>
@@ -74,10 +71,16 @@
       Hiring
     </h2>
 
-    <!-- ===== PARAGRAPH ===== -->
-    <p class="absolute left-[9.5%] top-[45%] text-[3.5cqw] leading-[1.38] font-medium text-[#2b2d3a] whitespace-nowrap">
-      Build your future with us and take part<br />
-      in meaningful projects that drive success.
+    <!-- ===== JOB TITLE (Dynamic Insertion Point) ===== -->
+    <div class="absolute left-[9.5%] top-[42%] w-[82%]">
+      <h3 id="job-title" class="text-[3.8cqw] font-bold text-[#15172e] tracking-tight truncate">
+        Job Title Placeholder
+      </h3>
+    </div>
+
+    <!-- ===== JOB SUMMARY PARAGRAPH (Dynamic Insertion Point) ===== -->
+    <p id="job-summary" class="absolute left-[9.5%] top-[47%] w-[82%] text-[3.2cqw] leading-[1.38] font-medium text-[#2b2d3a] line-clamp-2">
+      Job summary placeholder text goes here...
     </p>
 
     <!-- ===== PILL: AVAILABLE POSITION ===== -->
@@ -99,14 +102,14 @@
       </g>
     </svg>
 
-    <!-- ===== CHECKLIST ===== -->
-    <ul class="absolute left-[9.5%] top-[66.5%] flex flex-col gap-[2cqw]">
+    <!-- ===== CHECKLIST TAGS (Dynamic List Container) ===== -->
+    <ul id="job-tags" class="absolute left-[9.5%] top-[66.5%] flex flex-col gap-[2cqw]">
       <li class="flex items-center gap-[1.5cqw]">
         <svg class="w-[4.6cqw] h-[4.6cqw] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="#15172e" stroke-width="1.6" />
           <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="#15172e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <span class="text-[3.6cqw] font-semibold text-[#1f2130] leading-none">Frontend Developer</span>
+        <span class="tag-1 text-[3.6cqw] font-semibold text-[#1f2130] leading-none">Tag One</span>
       </li>
      
       <li class="flex items-center gap-[1.5cqw]">
@@ -114,7 +117,7 @@
           <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="#15172e" stroke-width="1.6" />
           <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="#15172e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <span class="text-[3.6cqw] font-semibold text-[#1f2130] leading-none">Full Stack Developer</span>
+        <span class="tag-2 text-[3.6cqw] font-semibold text-[#1f2130] leading-none">Tag Two</span>
       </li>
     </ul>
 
@@ -129,10 +132,9 @@
       <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
     </div>
 
-    <!-- ===== LUCIDE / HEROICONS  CARD ===== -->
+    <!-- ===== CARD ACCENT GRAPHIC ===== -->
     <div class="absolute left-[62%] top-[66%] w-[28%] aspect-square rounded-2xl bg-gradient-to-tr from-[#15172e] to-[#2e355c] p-[3cqw] shadow-xl flex items-center justify-center -rotate-6 border border-white/20">
       <div class="w-full h-full rounded-xl bg-[#6b7499]/20 flex items-center justify-center backdrop-blur-sm">
-        <!-- Lucide Megaphone Vector -->
         <svg xmlns="http://www.w3.org/2000/svg" class="w-[65%] h-[65%] text-white drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="m3 11 18-5v12L3 13v-2z"/>
           <path d="M11.6 16.8 a 3 3 0 1 1 -5.8-1.6"/>
@@ -147,9 +149,9 @@
       </div>
     </div>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- ===== FOOTER WORK LOCATION (Dynamic Insertion Point) ===== -->
     <p class="absolute left-0 right-0 top-[92.5%] text-center text-[3.1cqw] font-semibold text-[#3d3f4d] leading-none">
-      Work Mode: Fully Remote
+      Work Mode: <span id="work-location">Remote</span>
     </p>
   </main>
 </body>
