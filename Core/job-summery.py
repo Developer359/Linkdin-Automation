@@ -36,6 +36,9 @@ class JobLinkedInSummary(BaseModel):
     required_skills: list[str] = Field(description="Key technologies and skills list (e.g., React, Node.js, AWS)")
     what_we_offer: list[str] = Field(description="Perks, benefits, or offerings (max 3-4 items)")
     about_company: str = Field(description="1 concise sentence about what the company does")
+    workplace_type: str = Field(description="100% accurate determination of whether the job is Remote, On-site, or Hybrid based on the job description")
+    tags: list[str] = Field(description="Exactly two relevant tags related to the job (e.g., ['Full Stack Developer', 'Frontend Developer'])")
+    color_code: str = Field(description="Matching hex color code based on the job query category")
 
 
 def extract_email_fallback(text: str) -> str:
@@ -57,6 +60,14 @@ def summarize_job_with_gemini(job_data: dict, max_retries: int = 3) -> dict:
     2. Extract any company or recruiter contact email ONLY if explicitly mentioned in the job description. If not present, set company_email to 'Not specified'. Do NOT invent or estimate emails.
     3. Extract payment/salary info if mentioned in the description text and not already provided.
     4. Focus on essential skills, brief requirements, and perks.
+    5. Read the description carefully and determine with 100% accuracy whether the job is 'Remote', 'On-site', or 'Hybrid' for the `workplace_type` field.
+    6. Generate exactly TWO relevant job tags for the `tags` field according to the job role (e.g., ['Full Stack Developer', 'Frontend Developer']).
+    7. Assign the correct `color_code` based on the job query category using these exact rules:
+       - Full Stack: #171B26 (Deep Charcoal)
+       - AI Engineering: #1C2B4D (Modern Classic Navy)
+       - Design: #4A5568 (Professional Slate Grey)
+       - Software Engineering: #2C1E1A (Warm Dark Brown / Espresso)
+       - Other / Default query: #A0AEC0 (Crisp Light Grey)
 
     INPUT DATA:
     - Title: {job_data.get('title')}
@@ -104,7 +115,10 @@ def summarize_job_with_gemini(job_data: dict, max_retries: int = 3) -> dict:
                 "requirements": [],
                 "required_skills": [],
                 "what_we_offer": [],
-                "about_company": "Information unavailable."
+                "about_company": "Information unavailable.",
+                "workplace_type": "Not specified",
+                "tags": [],
+                "color_code": "#A0AEC0"
             }
             break
 
