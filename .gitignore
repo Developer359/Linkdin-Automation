@@ -9,6 +9,9 @@ Data/Job-Result-cache/*.json
 Job-Post-Design/Post-data.json
 Job-Post-Design/Generated-Images/
 
+# Ignore Main-Storage dynamic data outputs
+Main-Storage/main-storage.json
+
 # Ignore python cache files globally
 __pycache__/
 *.py[cod]
