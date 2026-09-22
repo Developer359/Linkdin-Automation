@@ -23,10 +23,11 @@ OUTPUT_FILE = os.path.join(PROJECT_ROOT, "Data", "Job-summery.json")
 MODEL_NAME = "gemini-3.5-flash-lite"
 
 
-# Pydantic schema enforcing concise notes for LinkedIn
+# Pydantic schema enforcing concise notes for LinkedIn, including location
 class JobLinkedInSummary(BaseModel):
     job_title: str = Field(description="Clean, concise job title")
     company: str = Field(description="Company name")
+    location: str = Field(description="Job location from the listing")
     job_url: str = Field(description="Direct URL to apply")
     company_email: str = Field(description="Extracted recruiter/company email from description or 'Not specified'")
     source: str = Field(description="Platform source (e.g., LinkedIn, WeWorkRemotely)")
@@ -51,6 +52,7 @@ def summarize_job_with_gemini(job_data: dict, max_retries: int = 3) -> dict:
     raw_desc = job_data.get("job_description", "")
     existing_email = job_data.get("company_email", "")
     existing_pay = job_data.get("pay_info", "Not specified")
+    existing_location = job_data.get("location", "Not specified")
 
     prompt = f"""
     You are an expert LinkedIn technical recruiter. Process this job posting into short, punchy notes for a LinkedIn automated post.
@@ -63,15 +65,16 @@ def summarize_job_with_gemini(job_data: dict, max_retries: int = 3) -> dict:
     5. Read the description carefully and determine with 100% accuracy whether the job is 'Remote', 'On-site', or 'Hybrid' for the `workplace_type` field.
     6. Generate exactly TWO relevant job tags for the `tags` field according to the job role (e.g., ['Full Stack Developer', 'Frontend Developer']).
     7. Assign the correct `color_code` based on the job query category using these exact rules:
-       - Full Stack: #171B26 (Deep Charcoal)
-       - AI Engineering: #1C2B4D (Modern Classic Navy)
-       - Design: #4A5568 (Professional Slate Grey)
-       - Software Engineering: #2C1E1A (Warm Dark Brown / Espresso)
-       - Other / Default query: #A0AEC0 (Crisp Light Grey)
+        - Full Stack: #171B26 (Deep Charcoal)
+        - AI Engineering: #1C2B4D (Modern Classic Navy)
+        - Design: #4A5568 (Professional Slate Grey)
+        - Software Engineering: #2C1E1A (Warm Dark Brown / Espresso)
+        - Other / Default query: #A0AEC0 (Crisp Light Grey)
 
     INPUT DATA:
     - Title: {job_data.get('title')}
     - Company: {job_data.get('company')}
+    - Location: {existing_location}
     - Source: {job_data.get('source', 'LinkedIn')}
     - Direct Job URL: {job_data.get('job_url')}
     - Provided Email: {existing_email}
@@ -107,6 +110,7 @@ def summarize_job_with_gemini(job_data: dict, max_retries: int = 3) -> dict:
             summarized = {
                 "job_title": job_data.get("title", ""),
                 "company": job_data.get("company", ""),
+                "location": existing_location,
                 "job_url": job_data.get("job_url", ""),
                 "company_email": existing_email or extract_email_fallback(raw_desc),
                 "source": job_data.get("source", "LinkedIn"),
@@ -122,8 +126,9 @@ def summarize_job_with_gemini(job_data: dict, max_retries: int = 3) -> dict:
             }
             break
 
-    # Maintain direct URL
+    # Maintain direct URL and exact location from input data
     summarized["job_url"] = job_data.get("job_url", "")
+    summarized["location"] = existing_location
 
     # Resolve email STRICTLY from input data or description regex
     current_email = summarized.get("company_email", "Not specified")
