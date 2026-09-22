@@ -1,161 +1,169 @@
 [
     {
-        "job_title": "Backend Engineer Node.js + AWS",
-        "company": "Deel",
-        "job_url": "https://www.linkedin.com/jobs/view/4455897455",
-        "company_email": "recruiting@deel.com",
+        "job_title": "Software Engineer – Java Full Stack Developer",
+        "company": "Global Rescue",
+        "location": "Islamabad, Islāmābād, Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4469958802",
+        "company_email": "Not specified",
         "source": "LinkedIn",
-        "pay_info": "Not specified",
-        "job_summary": "Join Deel as a Backend Engineer to build robust APIs and scalable systems using Node.js and AWS in a globally distributed team.",
+        "pay_info": "Based on experience + bonus + benefits",
+        "job_summary": "Global Rescue is seeking a mid-level Java Full Stack Developer to build and scale enterprise applications using Java, Spring Boot, and Angular.",
         "requirements": [
-            "At least 4 years of experience as a Software Engineer",
-            "Strong proficiency in Node.js, TypeScript/JavaScript best practices",
-            "Database mastery with PostgreSQL and query optimization",
-            "Solid grasp of OOP, design patterns, and scalable system design"
+            "Bachelor's degree in IT or Computer Science",
+            "3+ years of experience with Spring Boot, Microservices, JPA, Hibernate, SQL, and Angular",
+            "Experience with relational databases and SQL query optimization",
+            "Familiarity with RESTful APIs, CI/CD pipelines, and cloud deployment"
         ],
         "required_skills": [
+            "Java",
+            "Spring Boot",
+            "Angular",
+            "Microservices",
+            "MySQL",
+            "Hibernate"
+        ],
+        "what_we_offer": [
+            "Competitive salary based on experience",
+            "Performance bonus",
+            "Comprehensive benefits package"
+        ],
+        "about_company": "Global Rescue is the world’s leading membership organization providing integrated medical, security, intelligence, and crisis response services.",
+        "workplace_type": "On-site",
+        "image_path": "Job-Post-Design\\Generated-Images\\1_Software-Engineer--Java-Full-Stack-Developer.png",
+        "status": "pending"
+    },
+    {
+        "job_title": "AI Automation Specialist",
+        "company": "Zameen.com",
+        "location": "Lahore, Punjab, Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4467385472",
+        "company_email": "Not specified",
+        "source": "LinkedIn",
+        "pay_info": "Not specified",
+        "job_summary": "Looking for an AI Automation Specialist to identify manual tasks and implement AI-driven processes to improve productivity.",
+        "requirements": [
+            "Bachelor’s degree in Computer Science, IT, Engineering or related field",
+            "1-2+ years of experience in AI, automation, or software development",
+            "Hands-on experience with AI tools like OpenAI, ChatGPT, and LLMs",
+            "Basic programming knowledge in Python or similar"
+        ],
+        "required_skills": [
+            "AI Tools",
+            "LLMs",
+            "Zapier",
+            "Make",
+            "Power Automate",
+            "Python"
+        ],
+        "what_we_offer": [
+            "Opportunity to work with international stakeholders",
+            "Lead automation projects from planning to execution",
+            "Exposure to cutting-edge AI technologies"
+        ],
+        "about_company": "Zameen.com is a leading property portal offering real estate solutions.",
+        "workplace_type": "On-site",
+        "image_path": "Job-Post-Design\\Generated-Images\\2_AI-Automation-Specialist.png",
+        "status": "pending"
+    },
+    {
+        "job_title": "Senior Full Stack Engineer",
+        "company": "Truveta",
+        "location": "Hyderabad, PSD, PK",
+        "job_url": "https://pk.indeed.com/viewjob?jk=7cd91c06d74ee56f",
+        "company_email": "Not specified",
+        "source": "Indeed",
+        "pay_info": "Not specified",
+        "job_summary": "Truveta is seeking a Senior Full Stack Engineer to build and evolve internal annotation and administrative platforms using React and Node.js.",
+        "requirements": [
+            "8+ years of professional software development experience",
+            "Strong frontend experience with React and TypeScript",
+            "Backend experience using NestJS (Node.js) and/or C#/.NET",
+            "Experience building internal tools or workflow-driven applications"
+        ],
+        "required_skills": [
+            "React",
+            "TypeScript",
             "Node.js",
-            "TypeScript",
-            "JavaScript",
-            "PostgreSQL",
-            "AWS",
-            "SQL"
+            "NestJS",
+            "Redux",
+            "SQL/NoSQL"
         ],
         "what_we_offer": [
-            "Stock grant opportunities",
-            "Scalable global benefits and perks",
-            "Optional flexible working office membership with IWG",
-            "Career growth at a leading SaaS company"
+            "Opportunity to work on cutting-edge health data platforms",
+            "Collaborate with talented cross-functional teams",
+            "Solve complex UX and large-scale data challenges"
         ],
-        "about_company": "Deel is the all-in-one payroll and HR platform for global teams operating in over 150 countries.",
+        "about_company": "Truveta is a health provider-led data platform dedicated to saving lives with data.",
         "workplace_type": "Remote",
-        "image_path": "Job-Post-Design\\Generated-Images\\1_Backend-Engineer-Nodejs--AWS.png",
-        "status": "pending"
-    },
-    {
-        "job_title": "AI Engineer",
-        "company": "Pixis",
-        "job_url": "https://www.linkedin.com/jobs/view/4466506797",
-        "company_email": "Not specified",
-        "source": "LinkedIn",
-        "pay_info": "Not specified",
-        "job_summary": "Pixis is seeking an AI/ML Engineer to build next-generation AI-powered developer experiences and production-grade AI systems.",
-        "requirements": [
-            "Experience building and shipping production-grade AI products",
-            "Strong background in Python, TypeScript, and Bun",
-            "Hands-on experience building AI agents and agentic workflows",
-            "Proven ability to take AI systems from prototype to production"
-        ],
-        "required_skills": [
-            "Python",
-            "TypeScript",
-            "Bun",
-            "RAG",
-            "LLM Evaluation",
-            "AI Agents"
-        ],
-        "what_we_offer": [
-            "Opportunity to build cutting-edge AI developer tools",
-            "Work on AI agents, agentic workflows, and tool calling",
-            "Collaborate with top-tier international and local talent"
-        ],
-        "about_company": "Pixis builds the next generation of AI-powered developer experiences across IDE, desktop, web, mobile, and CLI.",
-        "workplace_type": "Remote",
-        "image_path": "Job-Post-Design\\Generated-Images\\2_AI-Engineer.png",
-        "status": "pending"
-    },
-    {
-        "job_title": "Junior Flutter Developer",
-        "company": "Synwave Solutions",
-        "job_url": "https://www.linkedin.com/jobs/view/4465973559",
-        "company_email": "Not specified",
-        "source": "LinkedIn",
-        "pay_info": "Not specified",
-        "job_summary": "Join Synwave Solutions as a Junior Flutter Developer to build cross-platform mobile applications. Great opportunity for a developer looking to grow their career in mobile tech.",
-        "requirements": [
-            "Experience with Flutter and Dart",
-            "Understanding of mobile app development lifecycle",
-            "Familiarity with RESTful APIs",
-            "Problem-solving and debugging skills"
-        ],
-        "required_skills": [
-            "Flutter",
-            "Dart",
-            "REST APIs",
-            "Git",
-            "Mobile Development"
-        ],
-        "what_we_offer": [
-            "Mentorship from senior engineers",
-            "Flexible working hours",
-            "Professional development opportunities"
-        ],
-        "about_company": "Synwave Solutions builds innovative mobile and web applications for global clients.",
-        "workplace_type": "Remote",
-        "image_path": "Job-Post-Design\\Generated-Images\\3_Junior-Flutter-Developer.png",
+        "image_path": "Job-Post-Design\\Generated-Images\\3_Senior-Full-Stack-Engineer.png",
         "status": "pending"
     },
     {
         "job_title": "Product Designer",
-        "company": "Dubizzle Labs",
-        "job_url": "https://www.linkedin.com/jobs/view/4447986075",
+        "company": "Kodifly",
+        "location": "Punjab, Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4470278329",
         "company_email": "Not specified",
         "source": "LinkedIn",
         "pay_info": "Not specified",
-        "job_summary": "Dubizzle Labs is seeking a Product Designer to build world-class web and mobile products using AI-powered tools.",
+        "job_summary": "Kodifly is seeking an end-to-end Product Designer to create intuitive web applications and shape commercial market appeal.",
         "requirements": [
-            "1 to 2 years of product design experience",
-            "Proficiency in Figma including components and auto-layout",
-            "Experience running UX processes like interviews and prototyping",
-            "Solid understanding of accessibility basics and inclusive design"
+            "Proven experience in UX research and UI design for web applications",
+            "Strong proficiency in Figma",
+            "Strong understanding of design systems and systems thinking",
+            "Comfortable working directly with engineers in an agile environment"
         ],
         "required_skills": [
             "Figma",
-            "Prototyping",
-            "UX Research",
-            "AI Tools",
-            "Design Systems"
+            "UX/UI Design",
+            "User Research",
+            "Design Systems",
+            "Adobe Creative Suite"
         ],
         "what_we_offer": [
-            "Opportunity to work in a growing engineering office of 500+ members",
-            "Build products scaling across 9 countries",
-            "Work with cutting-edge AI-powered design workflows"
+            "Competitive salary and share options",
+            "Opportunity to work with state-of-the-art AI technology",
+            "Professional and personal growth opportunities"
         ],
-        "about_company": "Dubizzle Labs builds world-class products to support hyper-growth businesses across 9 countries.",
+        "about_company": "Kodifly is an AI-first spatial intelligence company transforming infrastructure monitoring and management.",
         "workplace_type": "On-site",
         "image_path": "Job-Post-Design\\Generated-Images\\4_Product-Designer.png",
         "status": "pending"
     },
     {
-        "job_title": "Backend Engineer Node.js + AWS",
-        "company": "Deel",
-        "job_url": "https://www.linkedin.com/jobs/view/4455897455",
-        "company_email": "recruiting@deel.com",
+        "job_title": "Software Engineer – Java Full Stack Developer",
+        "company": "Global Rescue",
+        "location": "Islamabad, Islāmābād, Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4469958802",
+        "company_email": "Not specified",
         "source": "LinkedIn",
-        "pay_info": "Not specified",
-        "job_summary": "Deel is hiring a Backend Engineer with strong Node.js and AWS experience to help scale our global payroll and HR platform.",
+        "pay_info": "Based on experience + bonus + benefits",
+        "job_summary": "Global Rescue is seeking a mid-level Java Full Stack Developer to build and scale enterprise applications using Java, Spring Boot, and Angular.",
         "requirements": [
-            "At least 4 years of experience as a Software Engineer",
-            "Strong proficiency in Node.js and TypeScript/JavaScript",
-            "Database mastery with PostgreSQL and query optimization",
-            "Solid grasp of OOP, design patterns, and scalable system design"
+            "Bachelor's degree in IT or Computer Science",
+            "3+ years of experience with Spring Boot, Microservices, JPA, Hibernate, SQL, and Angular",
+            "Experience with relational databases and SQL query optimization",
+            "Working knowledge of Docker, Kubernetes, and AWS, Azure, or GCP"
         ],
         "required_skills": [
-            "Node.js",
-            "TypeScript",
-            "AWS",
-            "PostgreSQL",
-            "SQL",
-            "API Development"
+            "Java",
+            "Spring Boot",
+            "Angular",
+            "Microservices",
+            "Hibernate",
+            "MySQL",
+            "Docker",
+            "Kubernetes"
         ],
         "what_we_offer": [
-            "Stock grant opportunities",
-            "Additional perks and benefits based on location",
-            "Optional flexible working office membership"
+            "Competitive salary based on experience",
+            "Performance bonus",
+            "Comprehensive benefits package",
+            "Opportunity to work in a mission-driven crisis response organization"
         ],
-        "about_company": "Deel is the all-in-one payroll and HR platform for global teams operating in over 150 countries.",
-        "workplace_type": "Remote",
-        "image_path": "Job-Post-Design\\Generated-Images\\5_Backend-Engineer-Nodejs--AWS.png",
+        "about_company": "Global Rescue provides integrated medical, security, intelligence, and crisis response services worldwide.",
+        "workplace_type": "On-site",
+        "image_path": "Job-Post-Design\\Generated-Images\\5_Software-Engineer--Java-Full-Stack-Developer.png",
         "status": "pending"
     }
 ]
