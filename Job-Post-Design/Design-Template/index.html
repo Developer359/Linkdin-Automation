@@ -15,11 +15,6 @@
       theme: {
         extend: {
           fontFamily: { sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
-          colors: {
-            navy: '#15172e',
-            slate2: '#6b7499',
-            ink: '#111218',
-          },
         },
       },
     };
@@ -28,13 +23,14 @@
 
 <body class="min-h-screen bg-neutral-200 flex items-center justify-center p-4 font-sans">
 
-  <!-- ===== JOB POST CARD CONTAINER (Targeted for dynamic color_code injection) ===== -->
+  <!-- ===== JOB POST CARD CONTAINER (CSS Variables defined here) ===== -->
   <main
     id="job-post-card"
+    style="--primary-color: #15172e; --secondary-color: #6b7499; --primary-dark: #0a0c18;"
     class="relative w-[min(92vw,440px)] aspect-[370/490] overflow-hidden bg-gradient-to-br from-white via-[#f4f5fa] to-[#e9ebf3] shadow-2xl [container-type:inline-size]"
   >
 
-    <!-- ===== TOP DECOR: navy wave, stripes, photo (FULL BLEED LEFT TO RIGHT) ===== -->
+    <!-- ===== TOP DECOR: dynamic wave, stripes, photo ===== -->
     <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 367 520" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <clipPath id="photoClip">
@@ -42,8 +38,8 @@
         </clipPath>
       </defs>
 
-      <!-- navy wave (top-left) -->
-      <path d="M0,0 H205 V42 C165,42 132,70 100,90 C65,110 25,118 0,152 Z" fill="#15172e" />
+      <!-- Dynamic Wave (top-left) -->
+      <path id="top-wave" d="M0,0 H205 V42 C165,42 132,70 100,90 C65,110 25,118 0,152 Z" fill="var(--primary-color)" />
       <!-- diagonal light stripes -->
       <polygon points="8,0 22,0 0,46 0,28" fill="#8c94b6" />
       <polygon points="30,0 36,0 0,74 0,62" fill="#8c94b6" opacity=".85" />
@@ -59,34 +55,33 @@
         preserveAspectRatio="xMidYMid slice"
         clip-path="url(#photoClip)"
       />
-      <!-- navy border on the curved photo edge -->
-      <path d="M162,0 C166,62 186,108 214,146 C250,196 310,212 367,206" fill="none" stroke="#15172e" stroke-width="6" stroke-linecap="round" />
+      <!-- Border on the curved photo edge -->
+      <path id="photo-border" d="M162,0 C166,62 186,108 214,146 C250,196 310,212 367,206" fill="none" stroke="var(--primary-color)" stroke-width="6" stroke-linecap="round" />
     </svg>
 
     <!-- ===== HEADING (Static Branding) ===== -->
-    <h1 class="absolute left-[9.5%] top-[26%] text-[9cqw] leading-none font-extrabold text-ink tracking-tight">
+    <h1 class="absolute left-[9.5%] top-[26%] text-[9cqw] leading-none font-extrabold text-[#111218] tracking-tight">
       We’re
     </h1>
-    <h2 class="absolute left-[9.3%] top-[33%] text-[14.8cqw] leading-none font-bold text-slate2 tracking-[0.01em]">
+    <h2 id="hiring-text" style="color: var(--secondary-color);" class="absolute left-[9.3%] top-[33%] text-[14.8cqw] leading-none font-bold tracking-[0.01em]">
       Hiring
     </h2>
 
-
-    <!-- ===== JOB SUMMARY PARAGRAPH (Dynamic Insertion Point) ===== -->
+    <!-- ===== JOB SUMMARY PARAGRAPH ===== -->
     <p id="job-summary" class="absolute left-[9.5%] top-[47%] w-[82%] text-[3.2cqw] leading-[1.38] font-medium text-[#2b2d3a] line-clamp-2">
       Job summary placeholder text goes here...
     </p>
 
     <!-- ===== PILL: AVAILABLE POSITION ===== -->
-    <div class="absolute left-0 top-[56.5%] w-[52%] h-[5.8%] rounded-r-full bg-navy p-[2px]">
-      <div class="h-full w-full rounded-r-full bg-slate2 flex items-center justify-center px-2">
+    <div id="pill-1" style="background-color: var(--primary-color);" class="absolute left-0 top-[56.5%] w-[52%] h-[5.8%] rounded-r-full p-[2px]">
+      <div id="pill-1-inner" style="background-color: var(--secondary-color);" class="h-full w-full rounded-r-full flex items-center justify-center px-2">
         <span class="text-[3.6cqw] font-bold text-white tracking-wide">Available Position</span>
       </div>
     </div>
 
     <!-- ===== CHEVRONS ===== -->
     <svg class="absolute left-[58.5%] top-[57.8%] w-[24%]" viewBox="0 0 92 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <g stroke="#7b84a8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+      <g id="chevrons-group" stroke="var(--secondary-color)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 2 L4 9 L12 16" opacity="1" />
         <path d="M26 2 L18 9 L26 16" opacity=".9" />
         <path d="M40 2 L32 9 L40 16" opacity=".75" />
@@ -96,39 +91,39 @@
       </g>
     </svg>
 
-    <!-- ===== CHECKLIST TAGS (Dynamic List Container) ===== -->
+    <!-- ===== CHECKLIST TAGS ===== -->
     <ul id="job-tags" class="absolute left-[9.5%] top-[66.5%] flex flex-col gap-[2cqw]">
       <li class="flex items-center gap-[1.5cqw]">
-        <svg class="w-[4.6cqw] h-[4.6cqw] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="#15172e" stroke-width="1.6" />
-          <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="#15172e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        <svg class="w-[4.6cqw] h-[4.6cqw] shrink-0 checkbox-svg" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="var(--primary-color)" stroke-width="1.6" />
+          <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="var(--primary-color)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <span class="tag-1 text-[3.6cqw] font-semibold text-[#1f2130] leading-none">Tag One</span>
+        <span class="text-[3.6cqw] font-semibold text-[#1f2130] leading-none">Tag One</span>
       </li>
      
       <li class="flex items-center gap-[1.5cqw]">
-        <svg class="w-[4.6cqw] h-[4.6cqw] shrink-0" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="#15172e" stroke-width="1.6" />
-          <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="#15172e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        <svg class="w-[4.6cqw] h-[4.6cqw] shrink-0 checkbox-svg" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="1" y="3" width="14" height="14" rx="2.5" stroke="var(--primary-color)" stroke-width="1.6" />
+          <path d="M4.5 9.5 L8 13 L16.5 2.5" stroke="var(--primary-color)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <span class="tag-2 text-[3.6cqw] font-semibold text-[#1f2130] leading-none">Tag Two</span>
+        <span class="text-[3.6cqw] font-semibold text-[#1f2130] leading-none">Tag Two</span>
       </li>
     </ul>
 
     <!-- ===== RIGHT EDGE BAR + DOTS ===== -->
-    <div class="absolute right-0 top-[45%] h-[35%] w-[2.7%] bg-slate2"></div>
+    <div id="right-bar" style="background-color: var(--secondary-color);" class="absolute right-0 top-[45%] h-[35%] w-[2.7%]"></div>
     <div class="absolute left-[93.4%] top-[48%] flex flex-col gap-[2.7cqw]">
-      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
-      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
-      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
-      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
-      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
-      <span class="block w-[1.1cqw] h-[1.1cqw] rounded-full bg-[#8c91a8]"></span>
+      <span style="background-color: var(--secondary-color);" class="block w-[1.1cqw] h-[1.1cqw] rounded-full dot-item"></span>
+      <span style="background-color: var(--secondary-color);" class="block w-[1.1cqw] h-[1.1cqw] rounded-full dot-item"></span>
+      <span style="background-color: var(--secondary-color);" class="block w-[1.1cqw] h-[1.1cqw] rounded-full dot-item"></span>
+      <span style="background-color: var(--secondary-color);" class="block w-[1.1cqw] h-[1.1cqw] rounded-full dot-item"></span>
+      <span style="background-color: var(--secondary-color);" class="block w-[1.1cqw] h-[1.1cqw] rounded-full dot-item"></span>
+      <span style="background-color: var(--secondary-color);" class="block w-[1.1cqw] h-[1.1cqw] rounded-full dot-item"></span>
     </div>
 
     <!-- ===== CARD ACCENT GRAPHIC ===== -->
-    <div class="absolute left-[62%] top-[66%] w-[28%] aspect-square rounded-2xl bg-gradient-to-tr from-[#15172e] to-[#2e355c] p-[3cqw] shadow-xl flex items-center justify-center -rotate-6 border border-white/20">
-      <div class="w-full h-full rounded-xl bg-[#6b7499]/20 flex items-center justify-center backdrop-blur-sm">
+    <div id="accent-box" style="background: linear-gradient(to top right, var(--primary-color), var(--primary-dark));" class="absolute left-[62%] top-[66%] w-[28%] aspect-square rounded-2xl p-[3cqw] shadow-xl flex items-center justify-center -rotate-6 border border-white/20">
+      <div id="accent-box-inner" style="background-color: var(--secondary-color);" class="w-full h-full rounded-xl bg-opacity-20 flex items-center justify-center backdrop-blur-sm">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-[65%] h-[65%] text-white drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="m3 11 18-5v12L3 13v-2z"/>
           <path d="M11.6 16.8 a 3 3 0 1 1 -5.8-1.6"/>
@@ -137,13 +132,13 @@
     </div>
 
     <!-- ===== PILL: APPLY NOW ===== -->
-    <div class="absolute left-0 top-[80.5%] w-[52%] h-[5.8%] rounded-r-full bg-navy p-[2px]">
-      <div class="h-full w-full rounded-r-full bg-slate2 flex items-center justify-center px-2">
+    <div id="pill-2" style="background-color: var(--primary-color);" class="absolute left-0 top-[80.5%] w-[52%] h-[5.8%] rounded-r-full p-[2px]">
+      <div id="pill-2-inner" style="background-color: var(--secondary-color);" class="h-full w-full rounded-r-full flex items-center justify-center px-2">
         <span class="text-[3.6cqw] font-bold text-white tracking-wide">Apply Now</span>
       </div>
     </div>
 
-    <!-- ===== FOOTER WORK LOCATION (Dynamic Insertion Point) ===== -->
+    <!-- ===== FOOTER WORK LOCATION ===== -->
     <p class="absolute left-0 right-0 top-[92.5%] text-center text-[3.1cqw] font-semibold text-[#3d3f4d] leading-none">
       Work Mode: <span id="work-location">Remote</span>
     </p>

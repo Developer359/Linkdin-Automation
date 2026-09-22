@@ -39,7 +39,7 @@ def process_and_capture_jobs():
             "job_summary": job.get("job_summary", ""),
             "tags": job.get("tags", []),
             "work_location": job.get("workplace_type", "Not specified"),
-            "color_code": job.get("color_code", "#A0AEC0")
+            "color_code": job.get("color_code", "#15172e")
         }
         extracted_posts.append(post_item)
 
@@ -47,24 +47,22 @@ def process_and_capture_jobs():
     chunk_size = 5
     batched_posts = [extracted_posts[i:i + chunk_size] for i in range(0, len(extracted_posts), chunk_size)]
 
-    # Ensure output directory exists and save to Post-data.json
     os.makedirs(os.path.dirname(OUTPUT_JSON_FILE), exist_ok=True)
     with open(OUTPUT_JSON_FILE, "w", encoding="utf-8") as f:
         json.dump(batched_posts, f, indent=4, ensure_ascii=False)
 
     print(f"Successfully processed {len(extracted_posts)} jobs into batches of 5 and saved to '{OUTPUT_JSON_FILE}'")
 
-    # --- STEP 2: Launch local Chrome browser and capture dynamic job cards ---
+    # --- STEP 2: Launch local Chrome browser and capture dynamic colored job cards ---
     if not HTML_TEMPLATE_PATH.exists():
         print(f"Error: Could not find HTML template at '{HTML_TEMPLATE_PATH}'")
         return
 
     os.makedirs(OUTPUT_IMG_DIR, exist_ok=True)
 
-    print(f"\n--- Starting Dynamic Job Post Image Generator ({len(extracted_posts)} total jobs) ---")
+    print(f"\n--- Starting Dynamic Colored Job Post Image Generator ({len(extracted_posts)} total jobs) ---")
 
     with sync_playwright() as p:
-        # Launch local system Chrome to bypass download blocks
         browser = p.chromium.launch(channel="chrome", headless=True)
         page = browser.new_page()
 
@@ -78,19 +76,15 @@ def process_and_capture_jobs():
                 summary = job.get("job_summary", "")
                 tags = job.get("tags", [])
                 work_location = job.get("work_location", "Remote")
-                color_code = job.get("color_code", "#A0AEC0")
+                color_code = job.get("color_code", "#15172e")
 
-                print(f"[{global_idx}/{len(extracted_posts)}] Processing & Capturing: {title}...")
+                print(f"[{global_idx}/{len(extracted_posts)}] Processing & Capturing: {title} (Color: {color_code})...")
 
-                # Securely format local Windows file path into a file:// URI
                 page.goto(HTML_TEMPLATE_PATH.as_uri(), wait_until="domcontentloaded")
 
-                # Inject dynamic job data and color code directly into the DOM
+                # Inject dynamic job data and color codes via CSS Variables into the DOM
                 page.evaluate(
                     """({ title, summary, tags, workLocation, colorCode }) => {
-                        const titleEl = document.getElementById('job-title');
-                        if (titleEl) titleEl.innerText = title;
-
                         const summaryEl = document.getElementById('job-summary');
                         if (summaryEl) summaryEl.innerText = summary;
 
@@ -99,16 +93,45 @@ def process_and_capture_jobs():
 
                         const tagsContainer = document.getElementById('job-tags');
                         if (tagsContainer && tags && tags.length > 0) {
-                            const tagSpans = tagsContainer.querySelectorAll('span');
+                            const items = tagsContainer.querySelectorAll('li');
                             tags.forEach((tag, i) => {
-                                if (tagSpans[i]) tagSpans[i].innerText = tag;
+                                if (items[i]) {
+                                    const span = items[i].querySelector('span');
+                                    if (span) span.innerText = tag;
+                                    items[i].style.display = 'flex';
+                                }
                             });
+                            for (let j = tags.length; j < items.length; j++) {
+                                items[j].style.display = 'none';
+                            }
                         }
 
+                        // Helper to lighten/darken hex colors for secondary accents
+                        function adjustColor(hex, percent) {
+                            if (!hex || !hex.startsWith('#')) return '#6b7499';
+                            let num = parseInt(hex.replace("#",""), 16);
+                            let amt = Math.round(2.55 * percent);
+                            let R = (num >> 16) + amt;
+                            let G = (num >> 8 & 0x00FF) + amt;
+                            let B = (num & 0x0000FF) + amt;
+                            return "#" + (
+                                0x1000000 +
+                                (R<255?(R<0?0:R):255)*0x10000 +
+                                (G<255?(G<0?0:G):255)*0x100 +
+                                (B<255?(B<0?0:B):255)
+                            ).toString(16).slice(1);
+                        }
+
+                        const primaryColor = colorCode || '#15172e';
+                        const secondaryColor = adjustColor(primaryColor, 35); // Lighter accent tint
+                        const primaryDark = adjustColor(primaryColor, -20); // Darker shade for gradients
+
+                        // Set CSS variables on the main card container
                         const card = document.getElementById('job-post-card');
                         if (card) {
-                            card.style.borderColor = colorCode;
-                            card.style.borderWidth = '4px';
+                            card.style.setProperty('--primary-color', primaryColor);
+                            card.style.setProperty('--secondary-color', secondaryColor);
+                            card.style.setProperty('--primary-dark', primaryDark);
                         }
                     }""",
                     {
@@ -116,28 +139,25 @@ def process_and_capture_jobs():
                         "summary": summary,
                         "tags": tags,
                         "workLocation": work_location,
-                        "colorCode": color_code,
+                        "colorCode": color_code,  # FIX: key must match JS destructuring name
                     },
                 )
 
-                # Target the main card container and ensure visibility
                 job_card = page.locator("#job-post-card")
                 job_card.wait_for(state="visible", timeout=15000)
 
                 safe_title = sanitize_filename(title)
                 output_image_path = os.path.join(OUTPUT_IMG_DIR, f"{global_idx}_{safe_title}.png")
 
-                # Capture clean screenshot of the card
                 job_card.screenshot(path=output_image_path)
                 print(f"  ✓ Saved image to: {output_image_path}")
 
-                # 2-second pause between queries
                 time.sleep(2)
                 global_idx += 1
 
         browser.close()
 
-    print(f"\nDone! All data processed and card images generated successfully.")
+    print(f"\nDone! All dynamic colored job card images generated successfully.")
 
 
 if __name__ == "__main__":
