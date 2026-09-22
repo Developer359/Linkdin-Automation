@@ -1,0 +1,161 @@
+[
+    {
+        "job_title": "Backend Engineer Node.js + AWS",
+        "company": "Deel",
+        "job_url": "https://www.linkedin.com/jobs/view/4455897455",
+        "company_email": "recruiting@deel.com",
+        "source": "LinkedIn",
+        "pay_info": "Not specified",
+        "job_summary": "Join Deel as a Backend Engineer to build robust APIs and scalable systems using Node.js and AWS in a globally distributed team.",
+        "requirements": [
+            "At least 4 years of experience as a Software Engineer",
+            "Strong proficiency in Node.js, TypeScript/JavaScript best practices",
+            "Database mastery with PostgreSQL and query optimization",
+            "Solid grasp of OOP, design patterns, and scalable system design"
+        ],
+        "required_skills": [
+            "Node.js",
+            "TypeScript",
+            "JavaScript",
+            "PostgreSQL",
+            "AWS",
+            "SQL"
+        ],
+        "what_we_offer": [
+            "Stock grant opportunities",
+            "Scalable global benefits and perks",
+            "Optional flexible working office membership with IWG",
+            "Career growth at a leading SaaS company"
+        ],
+        "about_company": "Deel is the all-in-one payroll and HR platform for global teams operating in over 150 countries.",
+        "workplace_type": "Remote",
+        "image_path": "Job-Post-Design\\Generated-Images\\1_Backend-Engineer-Nodejs--AWS.png",
+        "status": "pending"
+    },
+    {
+        "job_title": "AI Engineer",
+        "company": "Pixis",
+        "job_url": "https://www.linkedin.com/jobs/view/4466506797",
+        "company_email": "Not specified",
+        "source": "LinkedIn",
+        "pay_info": "Not specified",
+        "job_summary": "Pixis is seeking an AI/ML Engineer to build next-generation AI-powered developer experiences and production-grade AI systems.",
+        "requirements": [
+            "Experience building and shipping production-grade AI products",
+            "Strong background in Python, TypeScript, and Bun",
+            "Hands-on experience building AI agents and agentic workflows",
+            "Proven ability to take AI systems from prototype to production"
+        ],
+        "required_skills": [
+            "Python",
+            "TypeScript",
+            "Bun",
+            "RAG",
+            "LLM Evaluation",
+            "AI Agents"
+        ],
+        "what_we_offer": [
+            "Opportunity to build cutting-edge AI developer tools",
+            "Work on AI agents, agentic workflows, and tool calling",
+            "Collaborate with top-tier international and local talent"
+        ],
+        "about_company": "Pixis builds the next generation of AI-powered developer experiences across IDE, desktop, web, mobile, and CLI.",
+        "workplace_type": "Remote",
+        "image_path": "Job-Post-Design\\Generated-Images\\2_AI-Engineer.png",
+        "status": "pending"
+    },
+    {
+        "job_title": "Junior Flutter Developer",
+        "company": "Synwave Solutions",
+        "job_url": "https://www.linkedin.com/jobs/view/4465973559",
+        "company_email": "Not specified",
+        "source": "LinkedIn",
+        "pay_info": "Not specified",
+        "job_summary": "Join Synwave Solutions as a Junior Flutter Developer to build cross-platform mobile applications. Great opportunity for a developer looking to grow their career in mobile tech.",
+        "requirements": [
+            "Experience with Flutter and Dart",
+            "Understanding of mobile app development lifecycle",
+            "Familiarity with RESTful APIs",
+            "Problem-solving and debugging skills"
+        ],
+        "required_skills": [
+            "Flutter",
+            "Dart",
+            "REST APIs",
+            "Git",
+            "Mobile Development"
+        ],
+        "what_we_offer": [
+            "Mentorship from senior engineers",
+            "Flexible working hours",
+            "Professional development opportunities"
+        ],
+        "about_company": "Synwave Solutions builds innovative mobile and web applications for global clients.",
+        "workplace_type": "Remote",
+        "image_path": "Job-Post-Design\\Generated-Images\\3_Junior-Flutter-Developer.png",
+        "status": "pending"
+    },
+    {
+        "job_title": "Product Designer",
+        "company": "Dubizzle Labs",
+        "job_url": "https://www.linkedin.com/jobs/view/4447986075",
+        "company_email": "Not specified",
+        "source": "LinkedIn",
+        "pay_info": "Not specified",
+        "job_summary": "Dubizzle Labs is seeking a Product Designer to build world-class web and mobile products using AI-powered tools.",
+        "requirements": [
+            "1 to 2 years of product design experience",
+            "Proficiency in Figma including components and auto-layout",
+            "Experience running UX processes like interviews and prototyping",
+            "Solid understanding of accessibility basics and inclusive design"
+        ],
+        "required_skills": [
+            "Figma",
+            "Prototyping",
+            "UX Research",
+            "AI Tools",
+            "Design Systems"
+        ],
+        "what_we_offer": [
+            "Opportunity to work in a growing engineering office of 500+ members",
+            "Build products scaling across 9 countries",
+            "Work with cutting-edge AI-powered design workflows"
+        ],
+        "about_company": "Dubizzle Labs builds world-class products to support hyper-growth businesses across 9 countries.",
+        "workplace_type": "On-site",
+        "image_path": "Job-Post-Design\\Generated-Images\\4_Product-Designer.png",
+        "status": "pending"
+    },
+    {
+        "job_title": "Backend Engineer Node.js + AWS",
+        "company": "Deel",
+        "job_url": "https://www.linkedin.com/jobs/view/4455897455",
+        "company_email": "recruiting@deel.com",
+        "source": "LinkedIn",
+        "pay_info": "Not specified",
+        "job_summary": "Deel is hiring a Backend Engineer with strong Node.js and AWS experience to help scale our global payroll and HR platform.",
+        "requirements": [
+            "At least 4 years of experience as a Software Engineer",
+            "Strong proficiency in Node.js and TypeScript/JavaScript",
+            "Database mastery with PostgreSQL and query optimization",
+            "Solid grasp of OOP, design patterns, and scalable system design"
+        ],
+        "required_skills": [
+            "Node.js",
+            "TypeScript",
+            "AWS",
+            "PostgreSQL",
+            "SQL",
+            "API Development"
+        ],
+        "what_we_offer": [
+            "Stock grant opportunities",
+            "Additional perks and benefits based on location",
+            "Optional flexible working office membership"
+        ],
+        "about_company": "Deel is the all-in-one payroll and HR platform for global teams operating in over 150 countries.",
+        "workplace_type": "Remote",
+        "image_path": "Job-Post-Design\\Generated-Images\\5_Backend-Engineer-Nodejs--AWS.png",
+        "status": "pending"
+    }
+]
