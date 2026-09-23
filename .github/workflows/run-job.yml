@@ -1,0 +1,29 @@
+name: Automated Job Pipeline
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Temporary test schedule: runs every 5 minutes
+  workflow_dispatch: # Lets you trigger a manual test run anytime
+
+jobs:
+  execute-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run main script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python main.py
