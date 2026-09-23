@@ -20,7 +20,7 @@ PROJECT_ROOT = os.path.dirname(CORE_DIR)
 INPUT_FILE = os.path.join(PROJECT_ROOT, "Data", "Job-Info.json")
 OUTPUT_FILE = os.path.join(PROJECT_ROOT, "Data", "Job-summery.json")
 
-MODEL_NAME = "gemini-3.5-flash-lite"
+MODEL_NAME = "gemini-2.5-flash-lite"
 
 
 # Pydantic schema enforcing concise notes for LinkedIn, including location

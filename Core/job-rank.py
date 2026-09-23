@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import traceback
 from pathlib import Path
@@ -23,14 +24,21 @@ def rank_and_select_jobs():
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         print("[!] GEMINI_API_KEY not found in environment variables.")
-        return
+        # Save empty output so downstream scripts don't crash on missing file
+        OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+            json.dump([], f)
+        sys.exit(1)
 
     try:
         client = genai.Client(api_key=api_key)
     except Exception as e:
         print(f"[!] Failed to initialize GenAI Client: {e}")
         traceback.print_exc()
-        return
+        OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+            json.dump([], f)
+        sys.exit(1)
 
     ranked_results = []
 

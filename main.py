@@ -36,7 +36,7 @@ def main():
     core_script = ROOT_DIR / "Core" / "main-core.py"
     job_post_script = ROOT_DIR / "Job-Post-Design" / "main-job-post.py"
     storage_script = ROOT_DIR / "Main-Storage" / "main-storage.py"
-    supabse_script = ROOT_DIR / "Supabse.py"
+    supabse_script = ROOT_DIR / "Main-Storage" / "Supabse.py"
 
     # Step 1: Run main-core.py (Scrapes, Ranks, Infos, and Summarizes Jobs)
     run_script(core_script, "Core Automation & Summarization (main-core.py)")
