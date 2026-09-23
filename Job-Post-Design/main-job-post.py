@@ -6,6 +6,29 @@ import sys
 CORE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(CORE_DIR)
 JOB_POST_DIR = os.path.join(PROJECT_ROOT, "Job-Post-Design")
+GENERATED_IMAGES_DIR = os.path.join(JOB_POST_DIR, "Generated-Images")
+
+
+def clear_previous_images():
+    print(f"\n" + "=" * 50)
+    print(f"🧹 Clearing previous images from Generated-Images...")
+    print("=" * 50)
+    
+    if os.path.exists(GENERATED_IMAGES_DIR):
+        count = 0
+        for filename in os.listdir(GENERATED_IMAGES_DIR):
+            file_path = os.path.join(GENERATED_IMAGES_DIR, filename)
+            # Ensure we are deleting files and not subdirectories
+            if os.path.isfile(file_path):
+                try:
+                    os.remove(file_path)
+                    print(f"🗑️ Deleted: {filename}")
+                    count += 1
+                except Exception as e:
+                    print(f"❌ Failed to delete {filename}: {e}")
+        print(f"✅ Successfully cleared {count} previous image(s).")
+    else:
+        print(f"⚠️ Directory not found: {GENERATED_IMAGES_DIR}. Skipping cleanup.")
 
 
 def run_script(script_name):
@@ -26,6 +49,9 @@ def run_script(script_name):
 
 def main():
     print("🚀 Starting Job Post Automation Pipeline...")
+    
+    # Step 0: Remove all previous images before running pipeline scripts
+    clear_previous_images()
     
     # Step 1: Run post-data.py first
     run_script("post-data.py")
