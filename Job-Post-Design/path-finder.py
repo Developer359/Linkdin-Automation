@@ -4,14 +4,12 @@ import time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-# Correct path resolution to project root
-CORE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.dirname(CORE_DIR)
-
-INPUT_FILE = os.path.join(PROJECT_ROOT, "Data", "Job-summery.json")
-OUTPUT_JSON_FILE = os.path.join(PROJECT_ROOT, "Job-Post-Design", "Post-data.json")
-HTML_TEMPLATE_PATH = Path(os.path.join(PROJECT_ROOT, "Job-Post-Design", "Design-Template", "index.html")).resolve()
-OUTPUT_IMG_DIR = os.path.join(PROJECT_ROOT, "Job-Post-Design", "Generated-Images")
+# Correct cross-platform path resolution using pathlib
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_FILE = BASE_DIR / "Data" / "Job-summery.json"
+OUTPUT_JSON_FILE = BASE_DIR / "Job-Post-Design" / "Post-data.json"
+HTML_TEMPLATE_PATH = BASE_DIR / "Job-Post-Design" / "Design-Template" / "index.html"
+OUTPUT_IMG_DIR = BASE_DIR / "Job-Post-Design" / "Generated-Images"
 
 
 def sanitize_filename(name: str) -> str:
@@ -21,11 +19,11 @@ def sanitize_filename(name: str) -> str:
 
 def process_and_capture_jobs():
     # --- STEP 1: Load and process data from Job-summery.json into Post-data.json ---
-    if not os.path.exists(INPUT_FILE):
-        print(f"Error: Could not find input file at '{INPUT_FILE}'")
+    if not DATA_FILE.exists():
+        print(f"Error: Could not find input file at '{DATA_FILE}'")
         return
 
-    with open(INPUT_FILE, "r", encoding="utf-8") as f:
+    with open(DATA_FILE, "r", encoding="utf-8") as f:
         jobs = json.load(f)
 
     if not jobs:
@@ -47,23 +45,24 @@ def process_and_capture_jobs():
     chunk_size = 5
     batched_posts = [extracted_posts[i:i + chunk_size] for i in range(0, len(extracted_posts), chunk_size)]
 
-    os.makedirs(os.path.dirname(OUTPUT_JSON_FILE), exist_ok=True)
+    OUTPUT_JSON_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_JSON_FILE, "w", encoding="utf-8") as f:
         json.dump(batched_posts, f, indent=4, ensure_ascii=False)
 
     print(f"Successfully processed {len(extracted_posts)} jobs into batches of 5 and saved to '{OUTPUT_JSON_FILE}'")
 
-    # --- STEP 2: Launch local Chrome browser and capture dynamic colored job cards ---
+    # --- STEP 2: Launch browser and capture dynamic colored job cards ---
     if not HTML_TEMPLATE_PATH.exists():
         print(f"Error: Could not find HTML template at '{HTML_TEMPLATE_PATH}'")
         return
 
-    os.makedirs(OUTPUT_IMG_DIR, exist_ok=True)
+    OUTPUT_IMG_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"\n--- Starting Dynamic Colored Job Post Image Generator ({len(extracted_posts)} total jobs) ---")
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(channel="chrome", headless=True)
+        # Use bundled chromium for cross-platform cloud compatibility (Windows & GitHub Actions Linux)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page()
 
         # Set viewport size wide and tall enough for the canvas
@@ -139,7 +138,7 @@ def process_and_capture_jobs():
                         "summary": summary,
                         "tags": tags,
                         "workLocation": work_location,
-                        "colorCode": color_code,  # FIX: key must match JS destructuring name
+                        "colorCode": color_code,
                     },
                 )
 
@@ -147,10 +146,10 @@ def process_and_capture_jobs():
                 job_card.wait_for(state="visible", timeout=15000)
 
                 safe_title = sanitize_filename(title)
-                output_image_path = os.path.join(OUTPUT_IMG_DIR, f"{global_idx}_{safe_title}.png")
+                output_image_path = OUTPUT_IMG_DIR / f"{global_idx}_{safe_title}.png"
 
-                job_card.screenshot(path=output_image_path)
-                print(f"  ✓ Saved image to: {output_image_path}")
+                job_card.screenshot(path=str(output_image_path))
+                print(f"    ✓ Saved image to: {output_image_path}")
 
                 time.sleep(2)
                 global_idx += 1
