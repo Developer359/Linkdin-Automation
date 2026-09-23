@@ -36,6 +36,7 @@ def main():
     core_script = ROOT_DIR / "Core" / "main-core.py"
     job_post_script = ROOT_DIR / "Job-Post-Design" / "main-job-post.py"
     storage_script = ROOT_DIR / "Main-Storage" / "main-storage.py"
+    supabse_script = ROOT_DIR / "Supabse.py"
 
     # Step 1: Run main-core.py (Scrapes, Ranks, Infos, and Summarizes Jobs)
     run_script(core_script, "Core Automation & Summarization (main-core.py)")
@@ -45,6 +46,9 @@ def main():
 
     # Step 3: Run main-storage.py (Stores and archives the final pipeline assets)
     run_script(storage_script, "Main Storage Handler (main-storage.py)")
+
+    # Step 4: Run Supabse.py (Uploads/Syncs final assets to Supabase)
+    run_script(supabse_script, "Supabase Sync Handler (Supabse.py)")
 
     print(f"\n{'='*70}")
     print("[✓] Entire project workflow executed successfully from start to finish!")
