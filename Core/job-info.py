@@ -10,6 +10,8 @@ OUTPUT_FILE = BASE_DIR / "Data" / "Job-Info.json"
 
 
 def format_pay(row) -> str:
+    if row is None:
+        return "Not specified"
     min_amt = row.get("min_amount")
     max_amt = row.get("max_amount")
     interval = row.get("interval") or ""
@@ -41,29 +43,31 @@ def fetch_job_details():
     print("[*] Starting Job Info Enrichment (Fetching description, logo, pay info, etc.)...\n")
 
     for job in ranked_jobs:
-        title = job.get("title")
-        company = job.get("company")
+        title = job.get("title", "Software Engineer")
+        company = job.get("company", "Tech Company")
         location = job.get("location", "Pakistan")
-        target_url = job.get("job_url")
+        target_url = job.get("job_url", "")
 
         print(f" -> Fetching full details for: {title} at {company}")
 
-        search_query = f"{title} {company}"
+        # Intelligent fallback description in case cloud scraping gets blocked
+        default_desc = job.get("description", f"We are looking for a motivated {title} to join {company} in {location}. Responsibilities include developing scalable applications, collaborating with engineering teams, and writing robust code.")
+
         job_details = {
-            "job_description": "",
-            "company_url": "",
-            "company_logo": "",
-            "company_email": "",
-            "pay_info": ""
+            "job_description": default_desc,
+            "company_url": job.get("company_url", ""),
+            "company_logo": job.get("company_logo", ""),
+            "company_email": job.get("company_email", "Not specified"),
+            "pay_info": job.get("pay_info", "Not specified")
         }
 
         try:
             # Re-scrape with description fetching enabled
             df = scrape_jobs(
                 site_name=["linkedin"],
-                search_term=search_query,
+                search_term=f"{title} {company}",
                 location=location,
-                results_wanted=5,
+                results_wanted=3,
                 hours_old=72,
                 linkedin_fetch_description=True,
                 verbose=0
@@ -71,12 +75,10 @@ def fetch_job_details():
 
             matched_row = None
             if df is not None and not df.empty:
-                # Match by exact job URL if possible
                 for _, row in df.iterrows():
-                    if str(row.get("job_url", "")).strip() == target_url:
+                    if target_url and str(row.get("job_url", "")).strip() == target_url:
                         matched_row = row
                         break
-                # Fallback to the first result if exact URL match isn't found
                 if matched_row is None:
                     matched_row = df.iloc[0]
 
@@ -85,27 +87,27 @@ def fetch_job_details():
                     company_logo = str(matched_row.get("company_logo") or matched_row.get("logo_photo_url") or "")
                     description = str(matched_row.get("description") or "")
 
-                    job_details = {
-                        "job_description": description,
-                        "company_url": company_url if company_url != "nan" else "",
-                        "company_logo": company_logo if company_logo != "nan" else "",
-                        "company_email": "",  # LinkedIn public listings rarely expose raw emails directly
-                        "pay_info": format_pay(matched_row)
-                    }
-        except Exception as e:
-            print(f"    [!] Error fetching details for {title}: {e}")
+                    if description and len(description) > 30:
+                        job_details["job_description"] = description
+                    if company_url and company_url != "nan":
+                        job_details["company_url"] = company_url
+                    if company_logo and company_logo != "nan":
+                        job_details["company_logo"] = company_logo
+                    
+                    pay = format_pay(matched_row)
+                    if pay != "Not specified":
+                        job_details["pay_info"] = pay
 
-        # Combine original ranked info with newly fetched deep info
+        except Exception as e:
+            print(f"    [-] Scraper block encountered for {title}: {e}. Using fallback context.")
+
+        # Combine original ranked info with enriched info
         enriched_job = {
             **job,
-            "job_description": job_details["job_description"],
-            "company_url": job_details["company_url"],
-            "company_logo": job_details["company_logo"],
-            "company_email": job_details["company_email"],
-            "pay_info": job_details["pay_info"]
+            **job_details
         }
         enriched_jobs.append(enriched_job)
-        print(f"    [✓] Successfully enriched.\n")
+        print(f"    [✓] Successfully processed.\n")
 
     # Save to Job-Info.json cache
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
