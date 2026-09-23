@@ -15,7 +15,7 @@ def ensure_fallback_cache():
     
     fallback_jobs = {
         "Fullstack.json": [
-            {"title": "Senior Full Stack Engineer", "company": "Systems Limited", "location": "Lahore / Hybrid", "job_url": "https://pk.linkedin.com/jobs", "date_posted": "2026-09-20", "source": "LinkedIn"}
+            {"title": "Full Stack Engineer", "company": "Systems Limited", "location": "Lahore / Hybrid", "job_url": "https://pk.linkedin.com/jobs", "date_posted": "2026-09-20", "source": "LinkedIn"}
         ],
         "AIEngineer.json": [
             {"title": "AI Automation Specialist", "company": "10Pearls", "location": "Karachi / Remote", "job_url": "https://pk.linkedin.com/jobs", "date_posted": "2026-09-20", "source": "LinkedIn"}
