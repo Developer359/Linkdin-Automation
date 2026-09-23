@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
@@ -24,7 +25,7 @@ def upload_image_and_save_job(job_data):
         with open(local_img_path, "rb") as f:
             file_bytes = f.read()
             
-        # Upload binary to Supabase Storage
+        # Upload binary to Supabase Storage (upsert replaces if it already exists)
         supabase.storage.from_(bucket_name).upload(
             path=file_name,
             file=file_bytes,
@@ -34,6 +35,8 @@ def upload_image_and_save_job(job_data):
         # Get the public URL for LinkedIn / database
         public_image_url = supabase.storage.from_(bucket_name).get_public_url(file_name)
         print(f"Image uploaded successfully! Public URL: {public_image_url}")
+    else:
+        print(f"Warning: Image path not found or invalid: {local_img_path}")
 
     # 2. Map all your dictionary fields into the database payload
     db_payload = {
@@ -60,26 +63,19 @@ def upload_image_and_save_job(job_data):
     return response
 
 if __name__ == "__main__":
-    # Test with your dictionary data
-    sample_job = {
-        "job_title": "Software Engineer – Java Full Stack Developer",
-        "company": "Global Rescue",
-        "location": "Islamabad, Islāmābād, Pakistan",
-        "job_url": "https://www.linkedin.com/jobs/view/4469958802",
-        "company_email": "Not specified",
-        "source": "LinkedIn",
-        "pay_info": "Based on experience + bonus + benefits",
-        "job_summary": "Global Rescue is seeking a mid-level Java Full Stack Developer to build and scale enterprise applications using Java, Spring Boot, and Angular.",
-        "requirements": [
-            "Bachelor's degree in IT or Computer Science",
-            "3+ years of experience with Spring Boot, Microservices, JPA, Hibernate, SQL, and Angular"
-        ],
-        "required_skills": ["Java", "Spring Boot", "Angular", "Microservices", "MySQL", "Hibernate"],
-        "what_we_offer": ["Competitive salary based on experience", "Performance bonus"],
-        "about_company": "Global Rescue is the world’s leading membership organization providing integrated medical, security, intelligence, and crisis response services.",
-        "workplace_type": "On-site",
-        "image_path": "Job-Post-Design\\Generated-Images\\1_Software-Engineer--Java-Full-Stack-Developer.png",
-        "status": "pending"
-    }
+    storage_json_path = "Main-Storage/main-storage.json"
     
-    upload_image_and_save_job(sample_job)
+    if os.path.exists(storage_json_path):
+        with open(storage_json_path, "r", encoding="utf-8") as f:
+            jobs_list = json.load(f)
+            
+        print(f"Found {len(jobs_list)} jobs in main-storage.json. Processing sync to Supabase...")
+        
+        for idx, job in enumerate(jobs_list, 1):
+            print(f"\n--- Processing Job {idx}/{len(jobs_list)}: {job.get('job_title')} ---")
+            try:
+                upload_image_and_save_job(job)
+            except Exception as e:
+                print(f"Error processing job '{job.get('job_title')}': {e}")
+    else:
+        print(f"Error: {storage_json_path} not found.")
