@@ -105,12 +105,20 @@ def rank_and_select_jobs():
             print(f"    [✓] Top pick selected: {best_job.get('title')} at {best_job.get('company')}")
 
         except Exception as e:
+            err_str = str(e)
+            # Surface authentication failures clearly so they are not silently swallowed
+            if "401" in err_str or "UNAUTHENTICATED" in err_str or "API_KEY" in err_str.upper():
+                print(f"    [!] AUTHENTICATION ERROR – check that GEMINI_API_KEY secret is set and valid.")
             print(f"    [!] Error processing {filename}: {e}")
             traceback.print_exc()
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(ranked_results, f, indent=4, ensure_ascii=False)
+
+    if not ranked_results:
+        print("[!] No jobs were successfully ranked. Pipeline cannot continue.")
+        sys.exit(1)
 
     print(f"\n[✓] Successfully ranked all categories and saved to Data/Job_Rank.json")
 

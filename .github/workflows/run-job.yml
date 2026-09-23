@@ -22,7 +22,10 @@ jobs:
 
       - name: Install dependencies with uv
         run: |
-          uv pip install --system supabase google-genai beautifulsoup4 requests python-dotenv pandas pillow python-jobspy
+          uv pip install --system supabase google-genai beautifulsoup4 requests python-dotenv pandas pillow python-jobspy playwright
+
+      - name: Install Playwright browsers
+        run: playwright install --with-deps chromium
 
       - name: Run main script
         env:

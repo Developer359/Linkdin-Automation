@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import re
 import time
@@ -10,8 +11,7 @@ from google.genai import types
 # Load environment variables
 load_dotenv()
 
-# Initialize Gemini Client
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+# Client is initialised inside run_job_summarizer() after the key is validated.
 
 # Correct path resolution to project root
 CORE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -48,7 +48,7 @@ def extract_email_fallback(text: str) -> str:
     return emails[0] if emails else "Not specified"
 
 
-def summarize_job_with_gemini(job_data: dict, max_retries: int = 3) -> dict:
+def summarize_job_with_gemini(job_data: dict, client: genai.Client, max_retries: int = 3) -> dict:
     raw_desc = job_data.get("job_description", "")
     existing_email = job_data.get("company_email", "")
     existing_pay = job_data.get("pay_info", "Not specified")
@@ -149,6 +149,18 @@ def save_progress_to_json(data_list: list):
 
 
 def run_job_summarizer():
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        print("[!] GEMINI_API_KEY not found in environment variables. Aborting.")
+        sys.exit(1)
+
+    try:
+        client = genai.Client(api_key=api_key)
+    except Exception as e:
+        print(f"[!] Failed to initialize Gemini client: {e}")
+        import traceback; traceback.print_exc()
+        sys.exit(1)
+
     if not os.path.exists(INPUT_FILE):
         print(f"Error: Could not find input file at '{INPUT_FILE}'")
         return
@@ -168,7 +180,7 @@ def run_job_summarizer():
     for idx, job in enumerate(job_list, start=1):
         print(f"[{idx}/{len(job_list)}] Processing: {job.get('title')} @ {job.get('company')}...")
         
-        clean_job = summarize_job_with_gemini(job)
+        clean_job = summarize_job_with_gemini(job, client)
         summarized_jobs.append(clean_job)
 
         save_progress_to_json(summarized_jobs)
