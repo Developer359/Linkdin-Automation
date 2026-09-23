@@ -1,5 +1,6 @@
 import os
 import json
+import traceback
 from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
@@ -24,8 +25,13 @@ def rank_and_select_jobs():
         print("[!] GEMINI_API_KEY not found in environment variables.")
         return
 
-    # Initialize Gemini client safely inside the function
-    client = genai.Client(api_key=api_key)
+    try:
+        client = genai.Client(api_key=api_key)
+    except Exception as e:
+        print(f"[!] Failed to initialize GenAI Client: {e}")
+        traceback.print_exc()
+        return
+
     ranked_results = []
 
     for filename in CATEGORY_FILES:
@@ -39,6 +45,7 @@ def rank_and_select_jobs():
                 jobs = json.load(f)
         except Exception as e:
             print(f"    [!] Error reading {filename}: {e}")
+            traceback.print_exc()
             continue
 
         if not jobs:
@@ -67,8 +74,9 @@ def rank_and_select_jobs():
             "job_url": "...",
             "date_posted": "...",
             "source": "...",
-            "evaluation_score": "...",  // A numeric score from 1-10 based on company reputation and job quality
-            "reason": "Write a short, punchy 2-3 sentence summary explaining why this job won based on company reputation, hiring score, and role fit."}}
+            "evaluation_score": "...",  
+            "reason": "Write a short, punchy 2-3 sentence summary explaining why this job won based on company reputation, hiring score, and role fit."
+        }}
         """
 
         try:
@@ -90,8 +98,8 @@ def rank_and_select_jobs():
 
         except Exception as e:
             print(f"    [!] Error processing {filename}: {e}")
+            traceback.print_exc()
 
-    # Save results sequentially into Data/Job_Rank.json
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(ranked_results, f, indent=4, ensure_ascii=False)
