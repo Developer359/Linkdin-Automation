@@ -6,9 +6,6 @@ from google import genai
 
 load_dotenv()
 
-# Initialize Gemini client using GEMINI_API_KEY from .env
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-
 BASE_DIR = Path(__file__).resolve().parents[1]
 CACHE_DIR = BASE_DIR / "Data" / "Job-Result-cache"
 OUTPUT_FILE = BASE_DIR / "Data" / "Job_Rank.json"
@@ -22,21 +19,30 @@ CATEGORY_FILES = [
 ]
 
 def rank_and_select_jobs():
-    if not os.getenv("GEMINI_API_KEY"):
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
         print("[!] GEMINI_API_KEY not found in environment variables.")
         return
 
+    # Initialize Gemini client safely inside the function
+    client = genai.Client(api_key=api_key)
     ranked_results = []
 
     for filename in CATEGORY_FILES:
         file_path = CACHE_DIR / filename
         if not file_path.exists():
+            print(f"[-] Cache file not found: {filename}, skipping...")
             continue
 
-        with open(file_path, "r", encoding="utf-8") as f:
-            jobs = json.load(f)
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                jobs = json.load(f)
+        except Exception as e:
+            print(f"    [!] Error reading {filename}: {e}")
+            continue
 
         if not jobs:
+            print(f"[-] No jobs found in {filename}, skipping...")
             continue
 
         print(f"[*] Processing and ranking query category: {filename.replace('.json', '')}...")
