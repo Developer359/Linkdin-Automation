@@ -21,14 +21,29 @@ CATEGORY_FILES = [
 ]
 
 def rank_and_select_jobs():
-    api_key = os.getenv("GEMINI_API_KEY")
+    # ------------------------------------------------------------------ #
+    # API-key validation                                                   #
+    # ------------------------------------------------------------------ #
+    api_key = os.getenv("GEMINI_API_KEY", "").strip()
+
+    # Safe, non-leaking diagnostic – always printed so CI logs confirm
+    # whether the secret was injected at all.
+    print(f"[*] Gemini key present: {bool(api_key)}, length: {len(api_key)}")
+
     if not api_key:
-        print("[!] GEMINI_API_KEY not found in environment variables.")
-        # Save empty output so downstream scripts don't crash on missing file
-        OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            json.dump([], f)
-        sys.exit(1)
+        raise RuntimeError(
+            "GEMINI_API_KEY is missing or empty. "
+            "Add the raw Google AI Studio key to the repository secret "
+            "(Settings → Secrets → Actions → GEMINI_API_KEY)."
+        )
+
+    # Catch the most common mis-storage mistakes before the HTTP call.
+    BAD_PREFIXES = ("GEMINI_API_KEY=", "Bearer ", '"', "'")
+    if api_key.startswith(BAD_PREFIXES):
+        raise RuntimeError(
+            "GEMINI_API_KEY must contain ONLY the raw key string (e.g. AIza…). "
+            "Do NOT include an assignment prefix, 'Bearer', or surrounding quotes."
+        )
 
     try:
         client = genai.Client(api_key=api_key)

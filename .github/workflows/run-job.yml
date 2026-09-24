@@ -27,6 +27,33 @@ jobs:
       - name: Install Playwright browsers
         run: playwright install --with-deps chromium
 
+      - name: Validate secrets
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        shell: bash
+        run: |
+          # Print safe diagnostic (GitHub masks the actual value in logs)
+          echo "[*] GEMINI_API_KEY present: $( [ -n "$GEMINI_API_KEY" ] && echo 'YES' || echo 'NO' ), length: ${#GEMINI_API_KEY}"
+
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "::error::GEMINI_API_KEY secret is missing or empty."
+            echo "::error::Go to: Repository → Settings → Secrets and variables → Actions → GEMINI_API_KEY → Update secret"
+            echo "::error::Store only the raw key (e.g. AIza...) — no quotes, no 'Bearer ' prefix, no 'GEMINI_API_KEY=' prefix."
+            exit 1
+          fi
+
+          # Reject common mis-storage patterns
+          if [[ "$GEMINI_API_KEY" == GEMINI_API_KEY=* ]] || \
+             [[ "$GEMINI_API_KEY" == Bearer\ * ]]       || \
+             [[ "$GEMINI_API_KEY" == \"*             ]] || \
+             [[ "$GEMINI_API_KEY" == \'*             ]]; then
+            echo "::error::GEMINI_API_KEY contains an invalid prefix or surrounding quotes."
+            echo "::error::Store ONLY the raw key string, e.g.:  AIzaSy..."
+            exit 1
+          fi
+
+          echo "[✓] GEMINI_API_KEY format looks correct."
+
       - name: Run main script
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
