@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies with uv
         run: |
-          uv pip install --system supabase google-genai beautifulsoup4 requests python-dotenv pandas pillow python-jobspy playwright
+          uv pip install --system -r requirements.txt
 
       - name: Install Playwright browsers
         run: playwright install --with-deps chromium
@@ -30,29 +30,31 @@ jobs:
       - name: Validate secrets
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         shell: bash
         run: |
-          # Print safe diagnostic (GitHub masks the actual value in logs)
-          echo "[*] GEMINI_API_KEY present: $( [ -n "$GEMINI_API_KEY" ] && echo 'YES' || echo 'NO' ), length: ${#GEMINI_API_KEY}"
-
+          echo "[*] Validating environment secrets..."
+          
+          # Check Gemini Key
           if [ -z "$GEMINI_API_KEY" ]; then
             echo "::error::GEMINI_API_KEY secret is missing or empty."
-            echo "::error::Go to: Repository → Settings → Secrets and variables → Actions → GEMINI_API_KEY → Update secret"
-            echo "::error::Store only the raw key (e.g. AIza...) — no quotes, no 'Bearer ' prefix, no 'GEMINI_API_KEY=' prefix."
             exit 1
           fi
 
-          # Reject common mis-storage patterns
-          if [[ "$GEMINI_API_KEY" == GEMINI_API_KEY=* ]] || \
-             [[ "$GEMINI_API_KEY" == Bearer\ * ]]       || \
-             [[ "$GEMINI_API_KEY" == \"*             ]] || \
-             [[ "$GEMINI_API_KEY" == \'*             ]]; then
-            echo "::error::GEMINI_API_KEY contains an invalid prefix or surrounding quotes."
-            echo "::error::Store ONLY the raw key string, e.g.:  AIzaSy..."
+          # Check Supabase URL
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "::error::SUPABASE_URL secret is missing or empty."
             exit 1
           fi
 
-          echo "[✓] GEMINI_API_KEY format looks correct."
+          # Check Supabase Key
+          if [ -z "$SUPABASE_KEY" ]; then
+            echo "::error::SUPABASE_KEY secret is missing or empty."
+            exit 1
+          fi
+
+          echo "[✓] All required secrets are present."
 
       - name: Run main script
         env:
