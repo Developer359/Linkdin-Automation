@@ -61,8 +61,15 @@ def process_and_capture_jobs():
     print(f"\n--- Starting Dynamic Colored Job Post Image Generator ({len(extracted_posts)} total jobs) ---")
 
     with sync_playwright() as p:
-        # Use bundled chromium for cross-platform cloud compatibility (Windows & GitHub Actions Linux)
-        browser = p.chromium.launch(headless=True)
+        # --- PERMANENT FIX: Use System Browser to Bypass Download Errors ---
+        # Tries to use the already installed Google Chrome or MS Edge on your machine.
+        try:
+            browser = p.chromium.launch(channel="chrome", headless=True)
+        except Exception:
+            try:
+                browser = p.chromium.launch(channel="msedge", headless=True)
+            except Exception:
+                browser = p.chromium.launch(headless=True) # Fallback to default Playwright browser
         page = browser.new_page()
 
         # Set viewport size wide and tall enough for the canvas
