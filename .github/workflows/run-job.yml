@@ -2,7 +2,7 @@ name: Automated Job Pipeline
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # Temporary test schedule: runs every 5 minutes
+    - cron: '0 4 * * *' # Runs daily at 9:00 AM PKT (4:00 AM UTC)
   workflow_dispatch: # Lets you trigger a manual test run anytime
 
 jobs:
