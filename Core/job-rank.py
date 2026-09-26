@@ -86,7 +86,7 @@ def rank_and_select_jobs():
 
         EVALUATION & RANKING RULES:
         1. Evaluate each company's global/regional reputation, market performance, brand size, stability, and hiring prestige. Major, well-established, or high-performance companies must receive the highest priority.
-        2. Consider junior/entry-level role appropriateness if available, but corporate reputation and company hiring score carry maximum weight.
+        2. Consider junior/entry-level mid-level role appropriateness if available, but corporate reputation and company hiring score carry maximum weight.
         3. Rank the options and select the **SINGLE absolute best job** from this list.
         4. Return ONLY a valid JSON object (no markdown blocks like ```json, just the raw JSON text) with this exact structure:
         {{
