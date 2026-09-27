@@ -1,0 +1,32 @@
+name: Daily Supabase Data Cleanup
+
+on:
+  schedule:
+    # Runs at 1:00 PM PKT (08:00 UTC) every day
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Enables manual trigger button in GitHub Actions tab
+
+jobs:
+  run-cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install supabase python-dotenv; fi
+
+      - name: Run Data-Remove Script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python Data-Remove/remove.py
