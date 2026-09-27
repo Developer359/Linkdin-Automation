@@ -129,8 +129,8 @@ def process_and_capture_jobs():
                         }
 
                         const primaryColor = colorCode || '#15172e';
-                        const secondaryColor = adjustColor(primaryColor, 35); // Lighter accent tint
-                        const primaryDark = adjustColor(primaryColor, -20); // Darker shade for gradients
+                        const secondaryColor = adjustColor(primaryColor, -15); // Darker accent tint for better contrast
+                        const primaryDark = adjustColor(primaryColor, -30); // Even darker shade for gradients
 
                         // Set CSS variables on the main card container
                         const card = document.getElementById('job-post-card');

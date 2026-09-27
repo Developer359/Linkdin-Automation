@@ -65,11 +65,11 @@ def summarize_job_with_gemini(job_data: dict, client: genai.Client, max_retries:
     5. Read the description carefully and determine with 100% accuracy whether the job is 'Remote', 'On-site', or 'Hybrid' for the `workplace_type` field.
     6. Generate exactly TWO relevant job tags for the `tags` field according to the job role (e.g., ['Full Stack Developer', 'Frontend Developer']).
     7. Assign the correct `color_code` based on the job query category using these exact rules:
-        - Full Stack: #171B26 (Deep Charcoal)
-        - AI Engineering: #1C2B4D (Modern Classic Navy)
-        - Design: #4A5568 (Professional Slate Grey)
-        - Software Engineering: #2C1E1A (Warm Dark Brown / Espresso)
-        - Other / Default query: #A0AEC0 (Crisp Light Grey)
+        - Full Stack: #0077B5 (LinkedIn Blue)
+        - AI Engineering: #6200EA (Vibrant Purple)
+        - Design: #E1306C (Vibrant Pink)
+        - Software Engineering: #059669 (Vibrant Emerald)
+        - Other / Default query: #EA580C (Vibrant Orange)
 
     INPUT DATA:
     - Title: {job_data.get('title')}
