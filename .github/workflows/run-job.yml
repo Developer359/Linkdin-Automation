@@ -1,10 +1,7 @@
 name: Automated Job Pipeline
 
 on:
-  schedule:
-    # Runs daily at 9:00 AM PKT (4:00 AM / 04:00 UTC)
-    - cron: '0 4 * * *'
-  workflow_dispatch: # Enables manual trigger button and cron-job.org dispatches
+  workflow_dispatch: # Enables manual triggers and cron-job.org API dispatches
 
 jobs:
   execute-pipeline:

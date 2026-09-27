@@ -1,9 +1,6 @@
 name: Daily Supabase Data Cleanup
 
 on:
-  schedule:
-    # Runs daily at 10:00 PM PKT (5:00 PM / 17:00 UTC)
-    - cron: '0 17 * * *'
   workflow_dispatch: # Enables manual trigger button and cron-job.org dispatches
 
 jobs:
