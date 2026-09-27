@@ -1,0 +1,40 @@
+{
+    "job_id": 113,
+    "post_content": null,
+    "image_url": "https://xjfdudoyebslmpttxhne.supabase.co/storage/v1/object/public/job-images/1_SEO--Full-Stack-Developer.png",
+    "local_image_path": "D:\\Linkdin-Automation\\Linkdin-posting\\post_image.png",
+    "full_job_record": {
+        "id": 113,
+        "job_title": "SEO & Full Stack Developer",
+        "company": "Pro Consulting",
+        "location": "Islamabad, Isl\u0101m\u0101b\u0101d, Pakistan",
+        "job_url": "https://www.linkedin.com/jobs/view/4472422998",
+        "company_email": "Not specified",
+        "source": "LinkedIn",
+        "pay_info": "Market-competitive salary based on experience",
+        "job_summary": "Manage website search performance while handling hands-on coding and WordPress development.",
+        "requirements": [
+            "Minimum 3 years of hands-on experience in SEO and full stack web/WordPress development",
+            "Strong full stack development skills",
+            "Solid understanding of technical and on-page SEO",
+            "Excellent English communication skills"
+        ],
+        "required_skills": [
+            "SEO",
+            "Full Stack Development",
+            "WordPress",
+            "Google Analytics",
+            "Google Search Console"
+        ],
+        "what_we_offer": [
+            "Market-competitive salary based on experience",
+            "Opportunity to lead digital and web presence",
+            "Collaborative work environment"
+        ],
+        "about_company": "Pro Consulting is a growing organization expanding its digital presence.",
+        "workplace_type": "On-site",
+        "image_url": "https://xjfdudoyebslmpttxhne.supabase.co/storage/v1/object/public/job-images/1_SEO--Full-Stack-Developer.png",
+        "status": "pending",
+        "created_at": "2026-09-27T10:58:35.905115+00:00"
+    }
+}
