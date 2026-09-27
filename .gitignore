@@ -15,3 +15,5 @@ Main-Storage/main-storage.json
 # Ignore python cache files globally
 __pycache__/
 *.py[cod]
+
+Linkdin-posting/post.json
