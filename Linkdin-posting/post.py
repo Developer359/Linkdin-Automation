@@ -49,6 +49,10 @@ def fetch_top_pending_job():
 
     print(f"Successfully fetched job ID: {job_id}")
 
+    # Ensure Post-Data directory exists
+    post_data_dir = SCRIPT_DIR / "Post-Data"
+    post_data_dir.mkdir(parents=True, exist_ok=True)
+
     # 3. Download Image if URL exists
     local_image_path = None
     if image_url:
