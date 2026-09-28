@@ -16,4 +16,4 @@ Main-Storage/main-storage.json
 __pycache__/
 *.py[cod]
 
-Linkdin-posting/post.json
+Linkdin-posting/Post-Data/

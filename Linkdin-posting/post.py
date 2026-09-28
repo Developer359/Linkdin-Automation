@@ -58,7 +58,7 @@ def fetch_top_pending_job():
             if img_response.status_code == 200:
                 # Get file extension from URL or default to .png
                 ext = Path(image_url.split("?")[0]).suffix or ".png"
-                image_file_path = SCRIPT_DIR / f"post_image{ext}"
+                image_file_path = SCRIPT_DIR / "Post-Data" / f"post_image{ext}"
                 
                 with open(image_file_path, "wb") as img_file:
                     img_file.write(img_response.content)
@@ -79,7 +79,7 @@ def fetch_top_pending_job():
         "full_job_record": top_job
     }
 
-    json_file_path = SCRIPT_DIR / "post.json"
+    json_file_path = SCRIPT_DIR / "Post-Data" / "post.json"
     with open(json_file_path, "w", encoding="utf-8") as json_file:
         json.dump(job_data, json_file, indent=4)
 

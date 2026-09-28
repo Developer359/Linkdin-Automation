@@ -153,7 +153,7 @@ def publish_buffer_post(text, image_url=None):
         raise e
 
 def main():
-    json_path = SCRIPT_DIR / "post.json"
+    json_path = SCRIPT_DIR / "Post-Data" / "post.json"
     if not json_path.exists():
         print("❌ Error: post.json file not found. Run your post generation script first.")
         sys.exit(1)
