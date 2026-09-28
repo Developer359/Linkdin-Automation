@@ -1,0 +1,63 @@
+name: LinkedIn Post Workflow
+
+on:
+  workflow_dispatch: # Enables manual triggers and cron-job.org API dispatches
+
+jobs:
+  run-posting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies with uv
+        run: |
+          uv pip install --system -r requirements.txt
+
+      - name: Validate secrets
+        env:
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: ${{ secrets.BUFFER_CHANNEL_ID }}
+        shell: bash
+        run: |
+          echo "[*] Validating environment secrets..."
+          
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "::error::SUPABASE_URL secret is missing or empty."
+            exit 1
+          fi
+
+          if [ -z "$SUPABASE_KEY" ]; then
+            echo "::error::SUPABASE_KEY secret is missing or empty."
+            exit 1
+          fi
+
+          if [ -z "$BUFFER_API_KEY" ]; then
+            echo "::error::BUFFER_API_KEY secret is missing or empty."
+            exit 1
+          fi
+
+          if [ -z "$BUFFER_CHANNEL_ID" ]; then
+            echo "::error::BUFFER_CHANNEL_ID secret is missing or empty."
+            exit 1
+          fi
+
+          echo "[✓] All required secrets are present."
+
+      - name: Run main post script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: ${{ secrets.BUFFER_CHANNEL_ID }}
+        run: python Linkdin-posting/main-post.py
