@@ -454,10 +454,30 @@ Runs `python Linkdin-posting/main-post.py` — fetches the next pending job and 
 
 ---
 
-### `remove-job.yml` — Job Cleanup
-Runs the cleanup script to remove old or expired job records from Supabase.
+### `remove-job.yml` — Supabase Data & Storage Cleanup
 
-**Trigger:** Manual (`workflow_dispatch`).
+Runs `python Data-Remove/remove.py` — **wipes all job images from Supabase Storage and clears the entire `jobs` database table**, keeping your storage clean and the ID counter reset before the next pipeline run.
+
+**What it does, step by step:**
+
+1. 🗂️ **Clears the `job-images` Storage bucket** — lists every file in the bucket and bulk-deletes them all (skips the hidden `.emptyFolderPlaceholder` file automatically)
+2. 🗃️ **Truncates the `jobs` database table** — calls a Supabase PostgreSQL RPC function `reset_jobs_table` that truncates the table and resets the `id` auto-increment sequence back to `1`
+3. ✨ **Leaves Supabase completely clean** — ready for the next fresh pipeline run
+
+**Required Secrets:** `SUPABASE_URL`, `SUPABASE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+
+**Trigger:** Manual (`workflow_dispatch`) or scheduled via cron-job.org before each new pipeline run.
+
+> ⚠️ **Important:** Before running this workflow, you must create the `reset_jobs_table` RPC function in your Supabase SQL Editor:
+>
+> ```sql
+> CREATE OR REPLACE FUNCTION reset_jobs_table()
+> RETURNS void AS $$
+> BEGIN
+>   TRUNCATE TABLE jobs RESTART IDENTITY;
+> END;
+> $$ LANGUAGE plpgsql;
+> ```
 
 ---
 
