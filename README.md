@@ -3,7 +3,7 @@
 <!-- ============================================================ -->
 <!--        BANNER IMAGE — replace src with your actual image     -->
 <!-- ============================================================ -->
-# 🤖 JobScout-AI
+# 🤖 Linkedin-Automation
 **An Agentic AI-Powered Linkedin Automation to fetch post and post them into Linkedin**
 
 <br/>
