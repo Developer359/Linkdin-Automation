@@ -3,7 +3,8 @@
 <!-- ============================================================ -->
 <!--        BANNER IMAGE — replace src with your actual image     -->
 <!-- ============================================================ -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,50:0077b5,100:00d4ff&height=220&section=header&text=LinkedIn+Job+Automation&fontSize=48&fontColor=ffffff&fontAlignY=40&desc=AI-Powered+Job+Scraping%2C+Ranking+%26+Auto-Posting+Pipeline&descAlignY=62&descColor=c9d1d9" width="100%" alt="LinkedIn Job Automation Banner"/>
+# 🤖 JobScout-AI
+**An Agentic AI-Powered Linkedin Automation to fetch post and post them into Linkedin**
 
 <br/>
 
