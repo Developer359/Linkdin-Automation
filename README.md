@@ -225,6 +225,11 @@ Each job category gets a distinct brand color injected into the visual card:
 
 <!-- Add your automation pipeline images below -->
 
+<img width="1204" height="526" alt="image" src="https://github.com/user-attachments/assets/6b9109f4-23cd-4e08-8b22-415dbcf3ddd2" />
+<img width="1091" height="520" alt="image" src="https://github.com/user-attachments/assets/f222b52c-c55a-4043-98ab-ae173bf6de61" />
+<img width="1176" height="488" alt="image" src="https://github.com/user-attachments/assets/2d9b6ecd-058e-4600-89d6-9f66aae9c41f" />
+
+
 
 
 ---
