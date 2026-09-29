@@ -3,14 +3,14 @@
 <!-- ============================================================ -->
 <!--        BANNER IMAGE — replace src with your actual image     -->
 <!-- ============================================================ -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,50:0077b5,100:00d4ff&height=220&section=header&text=LinkedIn%20Job%20Automation&fontSize=48&fontColor=ffffff&fontAlignY=40&desc=AI-Powered%20Job%20Scraping%2C%20Ranking%20%26%20Auto-Posting%20Pipeline&descAlignY=62&descColor=c9d1d9&animation=fadeIn" width="100%" alt="LinkedIn Job Automation Banner"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,50:0077b5,100:00d4ff&height=220&section=header&text=LinkedIn+Job+Automation&fontSize=48&fontColor=ffffff&fontAlignY=40&desc=AI-Powered+Job+Scraping%2C+Ranking+%26+Auto-Posting+Pipeline&descAlignY=62&descColor=c9d1d9" width="100%" alt="LinkedIn Job Automation Banner"/>
 
 <br/>
 
 <!-- ============================================================ -->
 <!--                        BADGES                               -->
 <!-- ============================================================ -->
-![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Gemini AI](https://img.shields.io/badge/Gemini_AI-Powered-4285F4?style=for-the-badge&logo=google&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![LinkedIn](https://img.shields.io/badge/LinkedIn-Auto--Posting-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)
@@ -30,7 +30,7 @@
 - [📸 Project Overview](#-project-overview)
 - [✨ Key Features](#-key-features)
 - [⚙️ Pipeline Flow — How the System Works](#️-pipeline-flow--how-the-system-works)
-- [🖼️ System Design](#️-system-design)
+- [🖼️ Automation Pipeline](#️-automation-pipeline)
 - [📁 Folder Structure](#-folder-structure)
 - [🚀 Installation & Setup Guide](#-installation--setup-guide)
 - [🔐 Environment Variables](#-environment-variables)
@@ -221,23 +221,11 @@ Each job category gets a distinct brand color injected into the visual card:
 
 ---
 
-## 🖼️ System Design
+## 🖼️ Automation Pipeline
 
-> 📌 **Add your system architecture diagram(s) here.**
+<!-- Add your automation pipeline images below -->
 
-<!-- ============================================================ -->
-<!--   Drop your system design images below this comment block.   -->
-<!--   Example:                                                    -->
-<!--   ![System Design](./docs/system-design.png)                 -->
-<!-- ============================================================ -->
 
-```
-┌──────────────────────────────────────────────┐
-│                                              │
-│   [ Add Your System Architecture Image Here ]│
-│                                              │
-└──────────────────────────────────────────────┘
-```
 
 ---
 
@@ -314,15 +302,11 @@ Linkdin-Automation/
 
 ## 🚀 Installation & Setup Guide
 
-Follow these steps carefully to get the full automation system running on your machine.
-
 ### Prerequisites
 
-Before you begin, make sure you have the following installed:
-
-- **Python 3.10+** — [Download here](https://www.python.org/downloads/)
+- **Python 3.10 – 3.12** — [Download here](https://www.python.org/downloads/)
 - **Git** — [Download here](https://git-scm.com/downloads)
-- **Google Chrome** or **Microsoft Edge** browser (required for Playwright screenshots)
+- **Google Chrome** or **Microsoft Edge** (required for Playwright screenshots)
 
 ---
 
@@ -335,63 +319,37 @@ cd Linkdin-Automation
 
 ---
 
-### Step 2 — Create a Virtual Environment
-
-It is strongly recommended to use a virtual environment to avoid dependency conflicts.
+### Step 2 — Install Libraries
 
 ```bash
-# Create the virtual environment
-python -m venv venv
-
-# Activate it — Windows (PowerShell)
-.\venv\Scripts\Activate.ps1
-
-# Activate it — Windows (Command Prompt)
-.\venv\Scripts\activate.bat
-
-# Activate it — macOS / Linux
-source venv/bin/activate
+pip install python-jobspy pandas python-dotenv
 ```
 
----
+```bash
+pip install google-genai
+```
 
-### Step 3 — Install All Dependencies
+```bash
+pip install playwright
+playwright install
+```
+
+```bash
+pip install supabase python-dotenv
+```
+
+Or install everything at once from `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
+playwright install
 ```
-
-This installs:
-
-| Package | Purpose |
-|---------|---------|
-| `supabase>=2.9.0` | Supabase Python client for DB & storage |
-| `google-genai` | Google Gemini AI SDK for ranking & summarization |
-| `python-jobspy` | Multi-site job scraper (LinkedIn, Indeed) |
-| `beautifulsoup4` | HTML parsing support |
-| `requests` | HTTP client for Buffer API & image downloads |
-| `python-dotenv` | Loads `.env` secrets into environment |
-| `pandas` | Data handling for scraper DataFrames |
-| `pillow` | Image processing utilities |
-| `playwright` | Headless browser for job card screenshot generation |
 
 ---
 
-### Step 4 — Install Playwright Browser
+### Step 3 — Configure Environment Variables
 
-Playwright needs a browser installed to render job card screenshots:
-
-```bash
-playwright install chromium
-```
-
-> **Note:** If you already have **Google Chrome** or **Microsoft Edge** installed on your machine, the system will automatically use your system browser — no download needed. The `playwright install` command is only needed as a fallback.
-
----
-
-### Step 5 — Configure Environment Variables
-
-Create a `.env` file in the **root directory** of the project and fill in your credentials:
+Create a `.env` file in the root of the project and fill in your credentials:
 
 ```env
 # Google Gemini AI
@@ -406,19 +364,17 @@ BUFFER_API_KEY=your_buffer_api_key_here
 BUFFER_CHANNEL_ID=your_buffer_linkedin_channel_id_here
 ```
 
-#### Where to get each key:
-
 | Key | Where to Get It |
 |-----|----------------|
 | `GEMINI_API_KEY` | [Google AI Studio](https://aistudio.google.com/app/apikey) → Create API Key |
 | `SUPABASE_URL` | Supabase Dashboard → Settings → API → Project URL |
 | `SUPABASE_KEY` | Supabase Dashboard → Settings → API → `service_role` secret key |
-| `BUFFER_API_KEY` | [Buffer Developer Portal](https://buffer.com/developers/apps) → Create App → Access Token |
-| `BUFFER_CHANNEL_ID` | Run `python buffer.py` — it prints your connected channel IDs |
+| `BUFFER_API_KEY` | [Buffer Developer Portal](https://buffer.com/developers/apps) → Access Token |
+| `BUFFER_CHANNEL_ID` | Run `python buffer.py` — prints your connected channel IDs |
 
 ---
 
-### Step 6 — Set Up Supabase Database
+### Step 4 — Set Up Supabase Database
 
 In your Supabase project, go to **SQL Editor** and run:
 
@@ -444,45 +400,23 @@ CREATE TABLE jobs (
 );
 ```
 
-Then create a **Storage bucket** named `job-images`:
-1. Go to **Supabase Dashboard → Storage**
-2. Click **New Bucket**
-3. Name it `job-images`
-4. Set it to **Public**
+Then in **Supabase → Storage**, create a **Public** bucket named `job-images`.
 
 ---
 
-### Step 7 — Run the Full Pipeline Locally
-
-Once everything is set up, run the master script:
+### Step 5 — Run the Full Pipeline
 
 ```bash
 python main.py
 ```
 
-This will execute all 4 stages sequentially:
-
-1. ✅ **Core automation** — scraping → AI ranking → enrichment → summarization
-2. ✅ **Image generation** — Playwright renders HTML job cards → PNG images
-3. ✅ **Storage assembly** — merges data and image paths into `main-storage.json`
-4. ✅ **Supabase cloud sync** — uploads images, inserts job records with `status = "pending"`
-
 ---
 
-### Step 8 — Run the LinkedIn Posting Pipeline
-
-After jobs are stored in Supabase with `status = "pending"`, trigger the posting pipeline:
+### Step 6 — Run the LinkedIn Posting Pipeline
 
 ```bash
 python Linkdin-posting/main-post.py
 ```
-
-This will:
-
-1. ✅ Fetch the oldest pending job from Supabase
-2. ✅ Download its cloud-hosted image
-3. ✅ Format and publish the LinkedIn post via Buffer
-4. ✅ Update the job status to `"posted"` in Supabase
 
 ---
 
@@ -547,7 +481,7 @@ BUFFER_CHANNEL_ID   →  Your Buffer LinkedIn channel ID
 
 | Technology | Role |
 |-----------|------|
-| **Python 3.10+** | Core language for all pipeline logic |
+| **Python 3.10 – 3.12** | Core language for all pipeline logic |
 | **Google Gemini AI** (`gemini-3.5-flash-lite`) | Job ranking, structured summarization, NLP |
 | **python-jobspy** | Multi-site job scraping (LinkedIn + Indeed) |
 | **Playwright** | Headless browser for HTML→PNG job card generation |
