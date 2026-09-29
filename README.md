@@ -319,7 +319,7 @@ Linkdin-Automation/
 ### Step 1 — Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Linkdin-Automation.git
+https://github.com/Developer359/Linkdin-Automation.git
 cd Linkdin-Automation
 ```
 
