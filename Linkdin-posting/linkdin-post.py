@@ -81,6 +81,10 @@ def generate_post_text(job_record):
     if job_url:
         text += f"📌 Apply Now:\n{job_url}\n\n"
 
+    text += "About Apextech\n"
+    text += "We source and publish the latest career opportunities from across Pakistan.\n\n"
+    text += "Follow us for regular job updates, and share your field of interest in the comments below.\n\n"
+
     text += hashtags
     return text.strip()
 
