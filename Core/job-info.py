@@ -101,7 +101,7 @@ def fetch_job_details():
         except Exception as e:
             print(f"    [-] Scraper block encountered for {title}: {e}. Using fallback context.")
 
-        # Combine original ranked info with enriched info
+        # Combine the original ranked info with enriched info
         enriched_job = {
             **job,
             **job_details
