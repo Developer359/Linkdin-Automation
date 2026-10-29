@@ -4,7 +4,7 @@
 <!--        BANNER IMAGE — replace src with your actual image     -->
 <!-- ============================================================ -->
 # 🤖 Linkedin-Automation
-**An Agentic AI-Powered Linkedin Automation to fetch post and post them into Linkedin**
+**An Agentic AI-Powered Linkedin Automation to fetch the post and post them into Linkedin**
 
 <br/>
 
